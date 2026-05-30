@@ -22,6 +22,17 @@ This blog is a summary of what was taught at HTB Meetup Mumbai #16 held on 30th 
 
 <!-- truncate -->
 
+<style>
+.diagram-container { margin: 1.5rem auto; max-width: 820px; text-align: center; }
+.diagram-caption { font-size: 0.95rem; color: #3a3a3a; margin-top: 0.5rem; }
+.diagram-img { width: 100%; max-width: 780px; border-radius: 8px; box-shadow: 0 12px 28px rgba(0,0,0,0.06); display: inline-block; }
+.diagram-img.small-diagram { max-width: 350px; }
+.diagram-svg { width: 100%; max-width: 780px; height: auto; display: inline-block; transition: transform 0.25s ease; }
+.diagram-svg:hover { transform: scale(1.01); }
+.diagram-text { font-family: ui-sans-serif, system-ui, sans-serif; fill: #4c7ece; font-size: 12px; }
+.diagram-title { font-family: ui-sans-serif, system-ui, sans-serif; fill: #4c7ece; font-size: 13px; font-weight: 700; }
+</style>
+
 So let's dive into it (hey, wait a minute, why do I feel like I am starting to sound like chat gipidy day by day, anyways, let's start)
 
 ## Session 1: "Authentication for Dummies" by Adhokshaj Mishra
@@ -38,7 +49,7 @@ So let's dive into it (hey, wait a minute, why do I feel like I am starting to s
 
 <div class="diagram-container">
 <figure>
-<img class="diagram-img" src="./imgs/single_comp_auth.png" alt="Single computer authentication history" />
+<img class="diagram-img small-diagram" src="https://raw.githubusercontent.com/haxnation/blog/main/blog/param-jasani/htb-meetup/imgs/single_comp_auth.png" alt="Single computer authentication history" />
 <figcaption class="diagram-caption"><strong>Fig:</strong> Early authentication was tied to single, shared mainframe access before central identity systems existed.</figcaption>
 </figure>
 </div>
@@ -60,7 +71,7 @@ So let's dive into it (hey, wait a minute, why do I feel like I am starting to s
 - At that time bandwidth was also costly, we had links operating at Kbps, we cannot just make frequent pushes, as it consume the entire bandwidth and hence would be very costly.
 <div class="diagram-container">
 <figure>
-<img class="diagram-img" src="./imgs/config_manager_multi_comp_auth.png" alt="Configuration management and multi-node authentication" />
+<img class="diagram-img small-diagram" src="https://raw.githubusercontent.com/haxnation/blog/main/blog/param-jasani/htb-meetup/imgs/config_manager_multi_comp_auth.png" alt="Configuration management and multi-node authentication" />
 <figcaption class="diagram-caption"><strong>Fig:</strong> Central configuration management reduced repeated credential pushes and kept authentication policies consistent.</figcaption>
 </figure>
 </div>
@@ -78,7 +89,7 @@ Lets take and example, we introduce a managed router into the network.
 
 <div class="diagram-container">
 <figure>
-<img class="diagram-img" src="./imgs/routerauth.png" alt="Router authentication and credential handling" />
+<img class="diagram-img small-diagram" src="https://raw.githubusercontent.com/haxnation/blog/main/blog/param-jasani/htb-meetup/imgs/routerauth.png" alt="Router authentication and credential handling" />
 <figcaption class="diagram-caption"><strong>Fig:</strong> Managed routers need authentication designs that avoid local credential caching.</figcaption>
 </figure>
 </div>
@@ -103,7 +114,7 @@ So how do we solve this problem? Let's see...
 
 <div class="diagram-container">
 <figure>
-<img class="diagram-img" src="isp_ras_pubnw.png" alt="ISP, RAS, and public network edge" />
+<img class="diagram-img" src="https://raw.githubusercontent.com/haxnation/blog/main/blog/param-jasani/htb-meetup/imgs/isp_ras_pubnw.png" alt="ISP, RAS, and public network edge" />
 <figcaption class="diagram-caption"><strong>Fig:</strong> The RAS edge separates the public network from the trusted ISP/internal network in the authentication flow.</figcaption>
 </figure>
 </div>
@@ -201,6 +212,13 @@ The researcher found a 5-step exploit chain that leads to complete system compro
 3. **Flawed Validation**: The system validates the command string using `HasPrefix(artifact, "command:")` instead of enforcing an exact match.
 4. **Direct Execution**: Because only the prefix is checked, an attacker can append malicious payloads like `command:bash -c 'rm -rf /'`, which are passed directly to `cmd.Run()` and `exec.CommandContext()` without sanitization.
 5. **Root RCE**: The arbitrary commands execute with the agent's root privileges.
+
+<div class="diagram-container">
+<figure>
+<img class="diagram-img" src="https://raw.githubusercontent.com/haxnation/blog/main/blog/param-jasani/htb-meetup/imgs/full-exploit-chain.png" alt="Agent logs showing exploit in progress" />
+<figcaption class="diagram-caption"><strong>Fig 2.1:</strong> Agent logs during exploitation — port knocking detected, metadata requests to 169[.]254[.]169[.]254, and command execution in progress.</figcaption>
+</figure>
+</div>
 
 ### Realistic Attack Scenarios
 - **Scenario A (SSRF Chain Attack):** An attacker exploits an existing SSRF bug in a customer's web app to reach the internal metadata IP. They serve a malicious JSON response containing crafted commands and send the magic TCP SYN packet to trigger execution. This requires ***zero credentials*** and ***zero user interaction***.
