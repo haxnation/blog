@@ -133,7 +133,7 @@ const config = {
       announcementBar: {
         id: 'welcome',
         content:
-          '// HAXNATION.BLOG — Community-driven cybersecurity &amp; dev content. <a href="https://github.com/haxnation/blog/blob/main/CONTRIBUTING.md" target="_blank">[ CONTRIBUTE ]</a>',
+          '// HAXNATION.BLOG — Offline meetups, CTFs and more. <a href="https://haxnation.org/mumbai" target="_blank">[ JOIN OUR WHATSAPP GROUPS ]</a>',
         backgroundColor: '#0b0b0b',
         textColor: '#5ce1e6',
         isCloseable: true,
