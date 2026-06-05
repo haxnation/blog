@@ -1,6 +1,6 @@
 ---
-slug: auth-for-dummies
-title: Summary of HTB Meetup Mumbai held on 30th May 26 
+slug: htb-mumbai-meetup-16-summary
+title: Summary of HTB Mumbai Meetup held on 30th May 2026 
 authors: [param-jasani]
 
 tags:
@@ -69,12 +69,14 @@ So let's dive into it (hey, wait a minute, why do I feel like I am starting to s
 - So configuration management will centralize user provisioning. 
 - But what if some of our nodes are not in network, how would you re-provision them, this is the problem with *push model*, if there are network outages, partial failures, or offline nodes it leads to inconsistency in network.
 - At that time bandwidth was also costly, we had links operating at Kbps, we cannot just make frequent pushes, as it consume the entire bandwidth and hence would be very costly.
+
 <div class="diagram-container">
 <figure>
 <img class="diagram-img small-diagram" src="https://raw.githubusercontent.com/haxnation/blog/main/blog/param-jasani/htb-meetup/imgs/config_manager_multi_comp_auth.png" alt="Configuration management and multi-node authentication" />
 <figcaption class="diagram-caption"><strong>Fig:</strong> Central configuration management reduced repeated credential pushes and kept authentication policies consistent.</figcaption>
 </figure>
 </div>
+
 - Lets do a small trick to save bandwidth, we will use the inverted *pull model*, 
 - What is it? In place of central config manager periodically user provisioning, we will make the nodes periodically poll a central config manager. 
 - What will be the policy to do this? (as we again have to save bandwidth, we can't just poll the manager as it would choke up our links) Check if creds are stored locally, if not, poll the manager.
