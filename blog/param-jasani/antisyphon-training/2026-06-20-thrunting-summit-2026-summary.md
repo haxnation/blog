@@ -160,7 +160,7 @@ When scalling we want to move away from this sequential pattern, how to do that?
 - Gates: Multiple agents can act as review gates in a workflow before critical decisions cascade and affect other areas.  
 
 #### 5. Skills
-Skills are the evolutionary progression from simple "prompts." Its where we concretize the fuzzy knowledge of organization(what lives in a hunter's head) into Standard Operating Procedures (SOPs).
+Skills are the evolutionary progression from simple "prompts." It's where we concretize the fuzzy knowledge of organization(what lives in a hunter's head) into Standard Operating Procedures (SOPs).
 
 Characteristics: They must be executable, automatable, and atomic (targeting a very specific method or objective).
 
@@ -171,22 +171,314 @@ Direction: You cannot just tell an agent to "go find stuff." Skills provide the 
 #### 6. Context Engineering
 Everything a base model knows lives in its pre-trained weights.
 There are two flaws associated with it first is that the knowledge base lags behind by few months and another is that they are inherently flawed for enterprise defense because they know absolutely nothing about your specific organization, network architecture, or crown jewels.
-So to give them the context, we can -
-Optimizing inference-time knowledge. Using mechanisms like RAG (Retrieval-Augmented Generation) or DuckDB to inject specific organizational context right when the agent needs it.
+So to give them the context, we can use mechanisms like RAG (Retrieval-Augmented Generation) or DuckDB to inject specific organizational context right when the agent needs it.
 
 #### 7. Feedback Loops
-A dedicated, skills-based node in the workflow that forces the AI system to engage in intentional reflection after a hunt is completed—regardless of whether it found a threat or not.
+Introducing a skills based node that allows for intentional reflection following a hunt to give suggestions of how it can improve itself. To simplify, After a hunt another agent will look into the hunt and ask questions that what was missed during the hunt while also coming up with suggestions to improve itself.
 
-The Goal: Generating concrete suggestions on how the system, the telemetry pipeline, or the hunt itself can be improved for the next run.
-
-#### 8. Evaluations (Evals)
+#### 8. Evaluations
 When you alter the system's architecture, prompts, or skills, you need a way to measure the impact of those changes.
-
-The Goal: Ensuring that system improvements are driven by hard metrics and verifiable performance data, rather than just relying on "vibes" or gut feelings about the AI's output.
+Eval ensures that system improvements are driven by hard metrics and verifiable performance data, rather than just relying on "vibes" or gut feelings about the AI's output.
 
 #### 9. Adversarial Resilience
-As David Bianco mentioned in the keynote, introducing an AI agent layer inherently increases your attack surface.
+As David mentioned in the keynote, introducing an AI agent layer inherently increases your attack surface.
+Therefore the threat actors can exploit the AI via prompt injection hidden within telemetry logs, manipulated MCP servers, or poisoned RAG databases.
+So we should actively guard and remediate every vector where an attacker could theoretically influence or hijack the agent's reasoning.
 
-The Threat: Threat actors can exploit the AI via prompt injection hidden within telemetry logs, manipulated MCP servers, or poisoned RAG databases.
+## Talk 2: "Avoiding Hunt Amnesia - Building a Memory Your AI Can Use" by Sydney Marrone
+### Introduction
+Sydney starts by presenting us the problem of Hunt Amnesia, what she simply means by that is our teams conduct a successful threat hunt and forget their own work; like 6 months or 1 year down the line, our teams are unable to remember that what queries were executed, the hypothesis or even what was the result of the hunt.
+She highlights that in 2026, it's still one of the biggest things that lies between our threat hunting teams and AI augmented threat hunting.
 
-The Goal: Actively guarding and remediating every vector where an attacker could theoretically influence or hijack the agent's reasoning.
+### What price we pay when suffering from Hunt Amnesia
+- Same Hypothesis, possibly hunted twice.
+- Same dead end, encountered twice
+- New hunter who is onboarded has zero knowledge of previous hunts, so they are starting from zero.
+
+The Knowledge part in PEAK framework is the most important that most people skip. Knowledge is connected to all parts of the hunt, so it has to be compounded at each and every step of a threat hunt.
+
+### Agentic Threat Hunting Framework (ATHF)
+ATHF is a framework in which AI agents join us in threat hunting cycle as collaborators, they do not replace us, they enable us.
+Now ATHF needs structured hunt notes, ATHF only works if our past hunts are readable to a human or even a model, so we need structuring, this is where LOCK comes in.
+
+### LOCK format
+The LOCK has four moves:
+- **L**earn - Contains what our hypothesis is and what's the threat context 
+- **O**bserve - Contains what does the expected normal look like or what does suspicious look like
+- **C**heck - Contains our queries which were executed, their results, the analysis that was performed and conducted iterations.
+- **K**eep - Contains the decisions made that were part of the hunt, lesson learned from this hunt, and what we will improve in next hunt.
+
+These all four moves go in a single hunt file which is in markdown(.md) format.
+
+#### Front Matter
+The front matter is in YAML format, it contains facts like -
+- When did the hunt run?
+- What TTPs were executed?
+- What it is linked to?
+- What are the results?
+- etc..
+
+#### Body 
+Below front matter we have our body, this is where our LOCK format actually comes into play, we have our LOCK headings and their subsequent information as stated above.
+
+
+The above format makes it easier for AI to query it, the sections are predictable which helps our teams to stick with the structure and makes our job easier to maintain memory.
+
+### Using AI Agents to query
+Just simply provide your AI agent the above created markdown files and ask questions related to your past hunts.
+Make a markdown hunt repo where you store all your previous hunts.
+
+### Takeaways
+- LOCK keeps our previous hunts in order, giving them a proper structure and in turn making it easier for our teams to look back in tim
+e while also making it easier for AI agents to query and find information about our previous hunts.
+- Memory compounds over time which helps our team to gain more knowledge over time, also less reliance of new hunters over seniors.
+
+
+## Lunch Demo: "Getting Started with Network-Based Threat Hunting" by Active Countermeasures Team
+
+### Introduction
+During the lunch break, Joe provided an introductory session on network threat hunting. The goal of this session was to help beginners collect, explore, and analyze network traffic in their home labs.
+
+### The Shape of Network Traffic
+When analyzing network traffic, packets are built in layers to encapsulate specific tasks. A simple `curl` request requires around 11 packets just to fetch an HTML page. These are the layers that matter most during threat hunting:
+- **Link Layer:** Handles flow within your local network (e.g., your laptop to your router).
+- **Internet Layer:** Routes your traffic across the internet (e.g., local IP and server IP).
+- **Transport Layer:** Handles the conversation flow and ports (e.g., TCP handshakes and port numbers).
+- **Application Layer:** Carries the actual message, which is usually encrypted (e.g., HTTP/HTTPS traffic).
+
+Looking at raw packets (PCAPs) in Wireshark can be overwhelming due to the sheer volume of data.
+
+### The Need for Connection Summaries
+Threat hunters live in the abstraction layer. We don't want to stare at individual packets; we want connection summaries to build a behavioral story.
+- Summaries tell us: Timestamp, Source/Destination IPs, Ports, Duration, and Bytes Transferred.
+- When combined with behavioral analysis (e.g., seeing a connection occur exactly every 20 seconds), we can hypothesize about what a device is actually doing.
+
+### Building a Home Lab Pipeline
+Joe showcased a simple, affordable pipeline for analyzing network traffic at home:
+
+#### 1. Capture Traffic (Packet Capture)
+- **Passive Collection:** Observing traffic on the side without modifying or decrypting it.
+- **Local Machine:** Use `tcpdump` (Linux/Mac) or `tshark` (Windows).
+- **Travel Router (The Easy Button):** Use a cheap travel router (e.g., $36 with open-source firmware), plug in a USB flash drive, run `tcpdump`, and connect all your devices. Let it run for 24 hours to capture your entire local network's traffic.
+
+#### 2. Generate Zeek Logs
+- **Zui (formerly Brim):** Drag and drop your `.pcap` file directly into the Zui UI, and it automatically converts it into Zeek logs.
+
+#### 3. Behavioral Analysis with RITA
+- RITA is best run in Docker.
+- Import your Zeek logs into RITA to identify malicious behaviors like beacons or long connections, and export the results.
+
+#### 4. Querying the Data (Zed Lake)
+- Import your Zeek logs and RITA output into a Zed Lake (using Zui).
+- Run queries to identify top talkers, longest connections, rare ports, and potential beacons.
+- **Pro-tip:** Use Generative AI (like Claude) to learn the Zeek/RITA schema and write the queries for you!
+
+
+## Talk 3: "Threat Hunting with RITA: A Behavioral Analysis of C2 Traffic" by Hermon Kidane
+
+### Introduction
+Hermon starts the talk by referring to the Pyramid of Pain.
+As we all know, the top layer of the Pyramid of Pain is TTPs, as it is the most difficult IOC to change for an attacker. 
+TTPs = Behaviors of a threat actor.
+So tracking down these behaviors makes our threat intelligence a lot better, and this is exactly where RITA comes in.
+
+### RITA (Real Intelligence Threat Analytics)
+- It is an open-source framework for detecting command and control communication through network traffic analysis.
+- The RITA framework ingests Zeek logs in TSV or JSON format, or PCAPs converted to Zeek logs for analysis.
+- It is developed by Active Countermeasures.
+- The analysis detects various behaviors:
+  - Beaconing 
+  - Long Connections
+  - DNS Tunneling 
+  - Threat Intel
+
+### How to feed Zeek logs to RITA
+#### Manual Way
+- Convert the PCAP file or network capture that you have to Zeek logs.
+- Then feed it to RITA.
+#### For automated/continuous monitoring
+- Place a Zeek network sensor.
+- Feed that data to RITA.
+
+### CLI Tools for Threat Hunting
+When analyzing Zeek logs, there are a few command-line tools that come in handy:
+- `zeek-cut`, `grep`, `awk`
+- **Threat Hunting Toolkit:** Developed by Ethan Robish (BHIS). This toolkit is extremely useful as it standardizes interactions with different Zeek log formats (JSON/TSV) and provides great analysis scripts.
+
+### Analyzing Beacons
+Beacons are persistent, regular callbacks from a compromised machine (victim) to the attacker's Command and Control (C2) server.
+- The victim repeatedly asks, "Do you have any jobs for me?"
+- Often, the C2 server says "Go back to sleep", but occasionally it will send instructions (e.g., run `whoami`).
+- Even when attackers mix in jitter (randomized timing), the traffic maintains a recognizable, regular cadence that cannot be easily masked on the network.
+
+### Using RITA to Hunt
+Hermon demonstrated the practical steps for analyzing this traffic using RITA's CLI interface. If you're ever unsure of what to do, running `rita` by itself provides a helpful list of available commands.
+
+1. **Importing Data:** Use `rita import --database=<database_name> --logs=<path_to_logs>` to ingest the Zeek logs.
+2. **Listing Databases:** Use `rita list`
+3. **Viewing Results:** Use `rita view <database_name>` to explore the analyzed data.
+
+#### Key RITA Columns
+When viewing the data, RITA provides a table sorted by severity, containing several insightful columns:
+- **Severity:** RITA calculates how malicious a connection is in the backend (Critical, High, Medium, Low).
+- **Source Address:** The internal host that is communicating outward.
+- **Destination Address:** The external domain/IP being contacted.
+- **Beacon:** The beacon score (indicating how regular and beacon-like the communication is).
+- **Duration:** Helpful for spotting long, persistent connections (another common malware behavior).
+- **Subdomains:** Indicates how many subdomains a top-level domain had in the logs. This is crucial for detecting DNS Tunneling (C2 over DNS).
+- **Threat Intel:** Flags domains matching any configured threat intelligence feeds.
+
+### DNS Tunneling
+- **Concept:** DNS Tunneling encapsulates C2 traffic or data exfiltration within DNS queries and responses.
+- Attackers use randomly generated subdomains to bypass perimeter defenses since DNS traffic is rarely blocked.
+- RITA detects this by analyzing the sheer volume of unique subdomains queried for a specific top-level domain.
+- A high subdomain count (e.g., thousands of queries to `*.malicious.com`) is a strong indicator of DNS tunneling.
+
+### Threat Modifiers & Correlation
+- RITA's extracted logs and signatures can be correlated with external Threat Intelligence platforms to level up your hunting.
+- By looking at specific threat modifiers, you can spot anomalies that stand out against known malicious patterns:
+  - **Prevalence:** Frequency of occurrence.
+  - **First Seen:** Identifying if a beacon is brand new vs. something seen 6 months ago.
+  - **Rare Signatures:** Looking for unusual JA3 hashes or User-Agent strings.
+  - **URI Mismatch.**
+
+### Network Threat Hunting to Find Security Gaps
+Threat hunting doesn't always yield a malicious C2 server; in fact, most connections are benign. However, network hunting is incredibly valuable for identifying security gaps, maintaining inventory, and baselining.
+
+**Finding Poor Security Configs:**
+- Spotting cleartext passwords or unencrypted sensitive information.
+- Identifying IoT devices calling out to weird update servers.
+- Detecting internal scanning or probes.
+- Misconfigurations like Kerberos or SMB traffic being sent out to a public address (once identified, we can harden our systems!).
+- Performance issues caused by configs making every internal host send wrong service packets outbound.
+
+**Inventory & Shadow IT:**
+- Network hunting can uncover Shadow IT, such as RMM (Remote Monitoring & Management) tools running that you never use in your org.
+- The network is a great way to build your hardware and software inventory.
+- It provides visibility into IoT, embedded systems, and other network devices that might not even support EDR agents.
+
+### General Takeaways
+- Network threat hunting is about finding anomalies in behaviors, not just relying on static signatures.
+- Tools like RITA simplify this by abstracting raw packets into actionable connection summaries.
+- Regularly reviewing RITA's output helps build a baseline of "normal" for your network, making malicious behavior and security gaps stand out faster.
+
+
+## Talk 4: "Threat Hunting in the Dark: A Practical Approach" by Shane Hartman
+
+Why "Finding BAD" Doesn't Work
+The Missing Context and Focus
+
+Many organizations start their threat hunting programs with the vague objective of "finding bad," as the managers are not technical and don't know how to put this up, so the threat hunters have questions in mind like - 
+
+    What does finding "bad" actually?
+
+    Are you trying to find an active attacker, confirm an existing breach, or just identify employees behaving badly?
+
+It also lacks focus, leaving teams unsure if they should concentrate their attention on infrastructure, the perimeter, services, or the cloud.
+
+    Finally, it fails to define success; if we find bad, is that now considered an incident?
+
+The "No-Win" Situation
+
+Hartman points out that building a program solely to look for "bad" creates a literal "no-win situation" for the security team:
+
+    If you do find bad: You now have an active incident on your hands. The organization has to immediately address the situation, which requires time, resources, and often causes business disruption.
+
+    If you don't find bad: You are left empty-handed when asked to prove the value of your time. Simply showing your manager a list of cool technical queries you ran does not demonstrate Return on Investment (ROI) or justify the hunting program's ongoing budget.
+
+Where Do You Start?
+Types of Threat Hunts
+
+Threat hunting is primarily a proactive activity used to identify threats that may have evaded detection. However, hunts can take several different forms:
+
+    Reactive: Acting upon specific information, such as Threat Intel or Indicators of Compromise (IoCs).
+
+    Telemetry / Posture: Hunts based on the environment itself, often referred to as "watching the watchers".
+
+    Proactive: Hypothesis-driven hunts exploring "what if" scenarios and how an attack would function.
+
+    Retro-Hunts: The process of repeating a previous hunt.
+    
+    You can also use a Threat Hunting framework.
+
+The ultimate goal of threat hunting is to improve the overall security posture of the organization.
+
+The Threat Hunting Maturity Model: 
+Where Are You?
+Before diving into specific telemetry or posture hunts, it helps to understand your current operational level. Referencing a framework created by David Bianco, Hartman outlines five tiers of threat hunting maturity:  
+Tier 0 (Initial): Relies primarily on automated alerting. There is little or no routine data collection.  
+Tier 1 (Minimal): Incorporates threat intelligence IOC searches. Features a moderate to high level of data collection.  
+Tier 2 (Procedural): Follows analysis procedures created by others. Maintains high or very high data collection.  
+Tier 3 (Innovative): Creates new data analysis procedures. High or very high data collection. At this stage, teams are producing real, actionable analysis.  
+Tier 4 (Leading): Automates the majority of successful analysis procedures.  Hartman noted that most organizations are currently sitting in tiers 0, 1, or 2, or a hybrid of those levels. In these early stages, teams might merely use EDR to pick up IOCs or centralize logs without actively reviewing them unless an alert triggers. They lack a formalized structure.  The goal is to transition out of the initial procedural stages and into the "Innovative" and "Leading" tiers. Reaching this maturity allows threat hunting to become automated and highly useful to other departments, such as the SOC, Red Team, Detection Engineering, and Cyber Threat Intelligence (CTI). For example, if CTI reports a new vulnerability, a leading program can simply qualify that they have already searched for and mitigated the issue, rather than having to spin up a reactionary, ad-hoc threat hunt.  
+
+Telemetry and Posture HuntingThese hunts start out with a foundational question: "How do we know what we know?".IT might assure us that EDR is fully deployed, all assets are known, and subnets are documented.We might believe we know what our cloud environments look like and that our logs are perfectly centralized. However, asking the question might reveal that Linux or Mac logs are missing entirely. If you don't ask the question, you will never realize there is a gap you cannot see into.  You must also ensure coverage across perimeters, firewalls, and third-party VPNs, as you never know where a threat group might pivot. You need to have the telemetry data first before you can actually hunt for threats.  The most practical approach is to assume there are gaps and actively hunt for them to validate these claims.A critical outcome of finding a gap is feeding that information back into the threat hunt process to answer what might not have been seen while the gap was in place.  How Do I Know I Have Full EDR Coverage?A practical example of "watching the watchers" is verifying your EDR deployment. Hartman provided a mathematical breakdown for this simple telemetry hunt:  Get the number of end points covered – $X$.  Query inventory system (a control system based on process) – $Y_1$.  Query Active directory (an authentication system) – $Y_2$.  Query IP Space in Use (the physical network space) – $Y_3$.  Remove non-endpoint compliant devices – ie. Routers.  $(X - Y_1)$ – Diff in Inventory system.  $(X - Y_2)$ – Diff in AD.  $(X - Y_3)$ – Diff in IP Space.  Any discrepancies reveal clear gaps in telemetry. When you work to close these gaps and bring the numbers closer to zero, this gap closure can be reported to leadership as a reduction in exposure.  Other Questions / HuntsThere are numerous other simple questions you can ask to confirm the correct data is collected:  Network Space: How much of your static IP space is occupied? This is where your server or core infrastructure often lives. Would you know if a new system showed up or if one was decommissioned?  Log Review: Do collect PowerShell logs? If so, what kind of information can you garner from them? Can you review and hunt DNS Logs?  Software Inventory: How many versions of Java are in the environment? Do you have Remote Management (RMM) tools like TeamViewer or ScreenConnect that attackers leverage to get into networks?  Account Management: Are service accounts staying within the designated areas? Do you even have an inventory of service accounts to know where they are supposed to be?  Focusing on the Crown JewelsA significant portion of your hunting emphasis should lie with the organization's "Crown Jewels".Identifying these assets relies on asset management, Business Impact Analysis, Business Continuity Plans, and Disaster Recovery procedures.These critical assets could include employee and client information, HR data, proprietary information, and core web applications.Hunters need to define the specific threats targeting these assets, understand what would happen if they were compromised, and develop hunts to address these specific hypotheses.
+
+Proactive Threat Hunting Approaches
+
+When shifting into proactive hunting, there are four primary methodologies you can leverage:
+
+    Hypothesis Driven: Grounded in organizational reality, this involves identifying the most likely attack vectors for your specific industry and mapping them back to MITRE ATT&CK techniques (e.g., hunting for persistence via scheduled tasks under T1053).
+
+    Intelligence Driven: This relies on details gathered from news feeds, articles, and intelligence sources. Hunters must determine if the intelligence is relevant to their organization, gather the TTPs, IoCs, and IOAs, and then build the hunt.
+
+    Anomaly-Based: Looking for deviations from normal baselines that may or may not appear as statistics. Examples include users running LOLBins, executing large outbound data transfers, or attempting privileged cloud API calls.
+
+    Analytics Driven: Driven primarily by statistical data and machine learning patterns. Examples include spotting DNS tunneling, long-lived cloud credential creation, or the use of limited/unusual protocols.
+
+Securing the Bag: Executive Buy-In
+Translating Tech to Business Value
+
+A crucial realization for the longevity of any hunting program is that executives do not fund "cool technical queries".
+
+    They are interested in funding risk reduction, cost avoidance, operational resilience, and board/shareholder equity.
+
+    Conversely, they want to avoid reputational damage, liability exposure, regulatory/compliance violations, and business disruption.
+
+To secure buy-in, you must speak their language and translate technical findings into tangible business value:
+
+    The Risk Reduction Frame: Move away from saying "We searched for T1078." Instead, explain that you verified and closed detection blind spots across 40% of the cloud credential access techniques used by active threat groups this quarter.
+
+    The Cost Avoidance Frame: Highlight that the global average cost of a data breach sits north of $4.4M, with an average containment lifecycle of 200+ days. Show how proactive hunting directly shrinks the Mean Time to Detect (MTTD), catching the attacker before lateral movement and ransomware deployment.
+
+Metrics Leadership Actually Cares About
+
+    Mean Time to Detect (MTTD).
+
+    Mean Time to Respond (MTTR).
+
+    False Positive Reduction: Showing how hunt findings are refined to reduce noise, creating analyst capacity back for the SOC.
+
+    ATT&CK Coverage Delta: The percentage increase in validated detection coverage over time.
+
+    Data Source Health: The identification of blind spots before an incident actually occurs.
+
+Common Pitfalls and Key Takeaways
+Pitfalls to Avoid
+
+    Executing generic or simple hunts that don't reflect your actual threat landscape or are already primarily covered by EDR alerting.
+
+    Missing key stakeholders with interest and buy-in.
+
+    Failing to mature the program over time.
+
+    Over-relying strictly on IoCs and ignoring operational baselines or environmental context.
+
+    Treating hunts as one-time events rather than an ongoing program.
+
+    As noted in the presentation, a poorly executed threat hunt becomes a checkbox exercise where nothing is gained, and nothing is learned.
+
+Key Takeaways
+
+    Ground every single scenario in your real threat landscape.
+
+    Define SMART objectives before developing a hunt.
+
+    The overarching goal is to elevate the security posture and awareness.
+
+    Keep track of your hunts and meticulously document the output.
+
+    Always be looking for ways to automate and mature the program.
+
+    Remember the core management principle: The overarching goal is to improve your security posture, not chase unicorns.
+
