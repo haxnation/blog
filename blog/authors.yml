@@ -13,6 +13,15 @@ param-jasani:
   image_url: https://github.com/param-jasani.png
   socials:
     github: param-jasani  
+
+A-Y-U-S-H-Y-A:
+  name: Ayushya Shah
+  title: Founder @ Haxnation
+  url: https://github.com/A-Y-U-S-H-Y-A
+  image_url: https://github.com/A-Y-U-S-H-Y-A.png
+  socials:
+    github: A-Y-U-S-H-Y-A  
+
 # ── Template for new authors ──────────────────────────────────────
 # Copy the block below, replacing the key with their GitHub username.
 #
