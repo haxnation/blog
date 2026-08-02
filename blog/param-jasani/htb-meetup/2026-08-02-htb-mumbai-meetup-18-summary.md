@@ -174,3 +174,18 @@ The talk also touched on a very interesting idea: the **alter ego**. The speaker
 The speaker even talked about creating mental anchors and switching into a more controlled mindset. He said to create boxes with scripts of personas that you want to mimic in your mental space and whenever you want to be that person just think of the script and start mimicking it. 
 Also *emotional detachment* from the character is also a key part of this practice as you don't want to land up in a gray area where you can't figure out the difference between the real you and your persona.
 
+### References and Further Reading
+
+**Kubernetes & Container Security (Session 1)**
+- [OWASP Kubernetes Top 10](https://owasp.org/www-project-kubernetes-top-ten/) - A critical awareness document. Pay special attention to **K03: Secrets Management Failures** and **K01: Insecure Workload Configurations**.
+- [NSA/CISA Kubernetes Hardening Guidance](https://www.cisa.gov/news-events/alerts/2022/03/15/updated-kubernetes-hardening-guide) - Comprehensive best practices on defense-in-depth, RBAC, and preventing container escapes.
+- [HackTricks: Docker Breakout / Container Escape](https://book.hacktricks.xyz/linux-hardening/privilege-escalation/docker-security/docker-breakout-privilege-escalation) - A deep dive into exploiting misconfigurations, including the Docker socket mounts and privileged container escapes demonstrated in the talk.
+- [Kubernetes Secrets - Official Documentation](https://kubernetes.io/docs/concepts/configuration/secret/) - Core concepts on how K8s handles (and base64 encodes) secrets natively.
+- [Kubernetes Security Overview](https://kubernetes.io/docs/concepts/security/overview/) - High-level cloud-native security principles.
+
+**Psychology, Social Engineering & Physical Pentesting (Session 2)**
+- *Social Engineering: The Science of Human Hacking* by Christopher Hadnagy - A foundational book on OSINT, pretexting, elicitation, and the psychology of human manipulation.
+- *Influence: The Psychology of Persuasion* by Robert B. Cialdini - A must-read on the psychological triggers discussed in the talk, such as Authority Bias, Scarcity, and Reciprocity.
+- *Practical Lock Picking* & *Keys to the Kingdom* by Deviant Ollam - Highly recommended books for understanding the physical security side of the industry.
+- [Darknet Diaries Podcast](https://darknetdiaries.com/) - Essential listening for physical red-teaming stories. Check out **Ep 134: Deviant** (featuring Deviant Ollam sharing stories of physical bypasses, lockpicking, and social engineering), **Ep 90: Jenny** (about physical penetration tester Jenny Radcliffe), **Ep 40: No Parking**, and **Ep 41: Just Visiting**.
+- [Social-Engineer.org (SEORG) Framework](https://www.social-engineer.org/framework/general-discussion/) - An open-source framework mapping out the dark arts of human hacking, pretexting, and rapport building.
