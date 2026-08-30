@@ -354,7 +354,7 @@ Now for the spicy part! How do analysts actually research these APTs from the gr
 - **Going Undercover:** Analysts venture into the dark web, join ransomware RSVP channels, or infiltrate Telegram chats. 
 - **Social Engineering:** They use social engineering techniques to make threat actors believe they are eligible to work as affiliates for them. 
 - **The Language Game:** They have to learn how people *actually* communicate in their native languages. 
-> **Indian Context:** We don't write Hindi the exact same way we speak it. Someone living in Maharashtra will incorporate Marathi slang, and Delhi folks have their own lingo! If an analyst uses an LLM to talk to threat actors, they will easily get detected because the LLM uses pure dictionary words. **(It will look like we are talking to Chatur from 3 Idiots!!)**
+> **An example for our Indian readers:** We don't write Hindi the exact same way we speak it. Someone living in Maharashtra will incorporate Marathi words here and there and same goes for other places around the world as well!! If an analyst uses an LLM to talk to threat actors, they will easily get detected because the LLM uses pure dictionary words.
 - **Initiation Rites:** Sometimes APTs ask for a blockchain payment as a "signup fee" to prove you are serious. A "smaller" task might even involve you performing a pentest on a target(illegally, of course!! to prove your skills!! that's what they say!!)
 
 ---
