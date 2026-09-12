@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunkblog=globalThis.webpackChunkblog||[]).push([[529],{1344(a){a.exports=JSON.parse('{"metadata":{"permalink":"/blog/","page":1,"postsPerPage":10,"totalPages":2,"totalCount":12,"nextPage":"/blog/page/2","blogDescription":"The official Haxnation community blog \u2014 cybersecurity, dev culture, and beyond.","blogTitle":"Haxnation Blog"}}')}}]);

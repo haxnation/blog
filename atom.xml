@@ -2,12 +2,508 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://haxnation.github.io/blog</id>
     <title>Haxnation Blog Blog</title>
-    <updated>2026-09-11T09:00:00.000Z</updated>
+    <updated>2026-09-12T09:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://haxnation.github.io/blog"/>
     <subtitle>Haxnation Blog Blog</subtitle>
     <icon>https://haxnation.github.io/blog/img/favicon.svg</icon>
     <rights>Copyright © 2026 Haxnation. All rights reserved.</rights>
+    <entry>
+        <title type="html"><![CDATA[Building Your Org's OIDC Policy: A Question-Led Guide]]></title>
+        <id>https://haxnation.github.io/blog/building-your-oidc-policy</id>
+        <link href="https://haxnation.github.io/blog/building-your-oidc-policy"/>
+        <updated>2026-09-12T09:00:00.000Z</updated>
+        <summary type="html"><![CDATA[A section-by-section, question-led walkthrough for building your organization's OpenID Connect (OIDC) policy from scratch.]]></summary>
+        <content type="html"><![CDATA[<p>Most companies don't have an OIDC problem because nobody understands OpenID Connect. They have one because nobody ever wrote down the <em>decisions</em>: which provider, which apps, who owns the credentials, how long a secret should live, what happens when someone forgets to rotate one. The protocol is standardized. Your organization's choices around it are not, until you write them down.</p>
+<p>This guide is built to be answered, not just read. Every section below explains <em>why</em> that piece of a policy matters, then hands you a short list of questions. Open a blank Word document next to this post, work through the sections in order, and by the end you'll have a first draft of a real OIDC policy, not a template with the blanks still in it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-use-this-guide">How to use this guide<a href="https://haxnation.github.io/blog/building-your-oidc-policy#how-to-use-this-guide" class="hash-link" aria-label="Direct link to How to use this guide" title="Direct link to How to use this guide" translate="no">​</a></h2>
+<p>Keep this post open in one window and Microsoft Word (or your editor of choice) open beside it. For each section:</p>
+<ol>
+<li class="">Read the short explainer — it tells you what the section is for and why it matters.</li>
+<li class="">Answer the 📝 questions directly in your Word document, under a heading matching the section number and title below (<code>1. Purpose</code>, <code>2. Scope</code>, and so on).</li>
+<li class="">Don't worry about polish on the first pass. A rough answer you can tighten later beats a blank section.</li>
+</ol>
+<p>By section 23, your Word document <em>is</em> your draft policy mirroring the structure below.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-purpose">1. Purpose<a href="https://haxnation.github.io/blog/building-your-oidc-policy#1-purpose" class="hash-link" aria-label="Direct link to 1. Purpose" title="Direct link to 1. Purpose" translate="no">​</a></h2>
+<p>Every policy needs a reason to exist, stated plainly enough that someone reading it two years from now, after the person who wrote it has left, still understands why it's there. This section is the "why," in a paragraph or two: what risk or inconsistency this policy is closing, and what "success" looks like once it's followed.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What specific problem is this policy solving (inconsistent OIDC use, past incident, audit finding, new regulatory pressure)?</li>
+<li class="">What triggered writing this policy now?</li>
+<li class="">Who is the executive sponsor or owning function (CISO, Head of IAM, Platform Engineering)?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-scope">2. Scope<a href="https://haxnation.github.io/blog/building-your-oidc-policy#2-scope" class="hash-link" aria-label="Direct link to 2. Scope" title="Direct link to 2. Scope" translate="no">​</a></h2>
+<p>Scope draws the line around what this policy governs and — just as importantly — what it doesn't. A policy that tries to cover everything usually ends up enforced nowhere.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Does this apply to workforce (employee) authentication, customer-facing authentication, or both?</li>
+<li class="">Which environments are covered: production only, or also staging/dev/test, only internal systems, only external ones or both?</li>
+<li class="">Which business units, subsidiaries, or acquired companies are in scope?</li>
+<li class="">What's explicitly out of scope (e.g., legacy SAML apps mid-migration, machine-to-machine/service auth, mainframe auth)?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-definitions">3. Definitions<a href="https://haxnation.github.io/blog/building-your-oidc-policy#3-definitions" class="hash-link" aria-label="Direct link to 3. Definitions" title="Direct link to 3. Definitions" translate="no">​</a></h2>
+<p>A shared glossary prevents arguments later about what "client" or "criticality" means. Define the standard OIDC/OAuth2 vocabulary once, then add any terms specific to your organization.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Do you need org-specific definitions for terms like "application criticality tier," "internal network," or "approved provider" that will be used later in this policy?</li>
+<li class="">Are there internal team names or system names (e.g., your IAM platform's internal codename) that need defining for readers outside that team?</li>
+</ul>
+<p><em>(Standard terms to include as-is: OIDC, OAuth 2.0, Identity Provider (IdP), Relying Party (RP)/Client, Client ID, Client Secret, Access Token, ID Token, Refresh Token, Scopes, Claims, PKCE, JWKS, Discovery Document, Redirect URI.)</em></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-approved-oidc-providers--applicability">4. Approved OIDC Providers &amp; Applicability<a href="https://haxnation.github.io/blog/building-your-oidc-policy#4-approved-oidc-providers--applicability" class="hash-link" aria-label="Direct link to 4. Approved OIDC Providers &amp; Applicability" title="Direct link to 4. Approved OIDC Providers &amp; Applicability" translate="no">​</a></h2>
+<p>This is the <em>allow-list</em> of identity providers your organization actually permits — not every provider that exists — <strong>and</strong> where each one is allowed to be used. Naming this explicitly stops individual teams from quietly standing up their own IdP, while mapping providers to application boundaries (internet-only, internal-only, hybrid, cloud/data-centre) ensures an internet-facing customer portal and an internal finance tool don't get the same default despite very different threat models.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Is there a preferred (primary/default) OIDC supplier for the organization?</li>
+<li class="">Which other providers are approved for specific cases, and why (e.g., a specific vendor for customer-facing apps, another for workforce SSO)?</li>
+<li class="">Is there a provider that is explicitly <em>disallowed</em> and why?</li>
+<li class="">What application boundary categories exist in your environment (e.g., internet-only, internal-only, internet-facing app connecting to internal services, specific cloud provider, specific data centre)?</li>
+<li class="">For each boundary category, is there a preferred or mandatory OIDC provider?</li>
+<li class="">Are there use cases where OIDC is <em>not</em> the right fit (e.g., legacy systems, B2B federation, service accounts) and what's used instead?</li>
+</ul>
+<p><em>(Suggested table to include in your Word doc — copy and adapt to your org):</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Provider</th><th>Status</th><th>Intended Use Case / Scope</th><th>Justification / Notes</th></tr></thead><tbody><tr><td>Example: Microsoft Entra ID (Azure AD)</td><td><strong>Primary / Preferred</strong></td><td>Workforce SSO, internal apps, M365-integrated services</td><td>Default for all employee-facing auth; covered by existing E5 licensing and conditional access policies</td></tr><tr><td>Example: Okta (Customer Identity)</td><td><strong>Approved</strong></td><td>Customer-facing web &amp; mobile apps (internet-only)</td><td>Required for CIAM use cases needing self-service registration and social federation</td></tr><tr><td>Example: Auth0 by Okta</td><td><strong>Approved — Conditional</strong></td><td>Legacy customer portal (until Q4 2027 migration)</td><td>Grandfathered; no new apps to onboard here — migrate to Okta CIAM</td></tr><tr><td>Example: Google Identity Platform</td><td><strong>Disallowed</strong></td><td>—</td><td>Not approved due to data residency and contractual gaps; exception requires CISO + Legal risk acceptance</td></tr><tr><td><em>Your Provider 1</em></td><td>Primary / Approved / Disallowed</td><td><em>e.g., Internal-only apps</em></td><td><em>Why this status</em></td></tr><tr><td><em>Your Provider 2</em></td><td>Primary / Approved / Disallowed</td><td><em>e.g., Specific business unit or cloud</em></td><td><em>Why this status</em></td></tr></tbody></table>
+<blockquote>
+<p>Tip: Keep this table as the single source of truth. If a provider isn't on this list, it's not approved — teams must submit a request per section 18 before integrating.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-application-classification">5. Application Classification<a href="https://haxnation.github.io/blog/building-your-oidc-policy#5-application-classification" class="hash-link" aria-label="Direct link to 5. Application Classification" title="Direct link to 5. Application Classification" translate="no">​</a></h2>
+<p>Not every application deserves the same level of authentication rigor. Defining criticality tiers up front lets every later section (MFA, token lifetime, logging) simply say "per the app's tier" instead of repeating itself.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What criticality tiers will you use (e.g., Critical / High / Standard / Low)?</li>
+<li class="">What factors determine an app's tier — data sensitivity, user base size, regulatory scope, revenue impact?</li>
+<li class="">Who assigns and approves an application's tier — the app owner, security team, or both?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-provider-selection-matrix">6. Provider Selection Matrix<a href="https://haxnation.github.io/blog/building-your-oidc-policy#6-provider-selection-matrix" class="hash-link" aria-label="Direct link to 6. Provider Selection Matrix" title="Direct link to 6. Provider Selection Matrix" translate="no">​</a></h2>
+<p>Where section 4 names the approved providers, this section turns that list into a decision tool: given an application's boundary type and criticality tier, which provider should a team actually pick, and in what order of preference?</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What is the priority order of approved OIDC suppliers (first choice, second choice, fallback)?</li>
+<li class="">Does the priority order change based on application boundary (internet vs. internal vs. hybrid) or cloud/data-centre placement?</li>
+<li class="">Is there a documented matrix (boundary type × criticality tier → preferred provider) that teams can self-serve from?</li>
+</ul>
+<p><em>(Suggested table to include in your Word doc — copy and adapt to your tiers/boundaries from sections 4–5):</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Boundary Type \ Criticality Tier</th><th><strong>Critical</strong></th><th><strong>High</strong></th><th><strong>Standard</strong></th><th><strong>Low</strong></th></tr></thead><tbody><tr><td><strong>Internet-only</strong> (customer-facing, public)</td><td><strong>Okta CIAM (Primary)</strong> — Entra ID not permitted</td><td><strong>Okta CIAM (Primary)</strong></td><td><strong>Okta CIAM (Primary)</strong></td><td><strong>Okta CIAM</strong> or Entra ID (if workforce tool)</td></tr><tr><td><strong>Internal-only</strong> (corp network / VPN, workforce)</td><td><strong>Entra ID (Primary)</strong> — HSM-backed key req.</td><td><strong>Entra ID (Primary)</strong></td><td><strong>Entra ID (Primary)</strong></td><td><strong>Entra ID (Primary)</strong></td></tr><tr><td><strong>Hybrid</strong> (internet-facing app → internal API/service)</td><td><strong>Entra ID (Primary)</strong> + Okta for external users — separate clients</td><td><strong>Entra ID (Primary)</strong> — Okta (Fallback for B2C)</td><td><strong>Entra ID (Preferred)</strong> / Okta (Allowed with approval)</td><td><strong>Either</strong> — per data sensitivity</td></tr><tr><td><strong>Cloud / Data-centre specific</strong> <em>(if applicable)</em></td><td><em>e.g., AWS-hosted Critical → Entra ID</em></td><td><em>e.g., DC2 High → Entra ID</em></td><td><em>e.g., Standard → Entra ID</em></td><td><em>e.g., Low → Entra ID</em></td></tr></tbody></table>
+<blockquote>
+<p>How to use it: Find your boundary row and criticality column (tiers defined in section 5). The cell tells you the mandatory/expected IdP from section 4. Anything off-matrix requires a documented exception per your exception process. Add or remove rows/columns to match your actual boundaries and tiers — this exact shape is just an example.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-application-registration">7. Application Registration<a href="https://haxnation.github.io/blog/building-your-oidc-policy#7-application-registration" class="hash-link" aria-label="Direct link to 7. Application Registration" title="Direct link to 7. Application Registration" translate="no">​</a></h2>
+<p>Someone has to actually issue the client ID and secret. If that person or team isn't named, every app team either finds their own workaround or waits indefinitely.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Who is the person, team, or ticketing queue to contact to register a new application and obtain OIDC credentials?</li>
+<li class="">What information must an app team provide at registration (app name, owner, criticality tier, redirect URIs, environment)?</li>
+<li class="">Is there a self-service portal, or is this always a manual request?</li>
+<li class="">What is the expected turnaround time (SLA) for issuing credentials?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="8-client-id--secret-management">8. Client ID &amp; Secret Management<a href="https://haxnation.github.io/blog/building-your-oidc-policy#8-client-id--secret-management" class="hash-link" aria-label="Direct link to 8. Client ID &amp; Secret Management" title="Direct link to 8. Client ID &amp; Secret Management" translate="no">​</a></h2>
+<p>Client secrets are effectively passwords for applications, and they're routinely mishandled — checked into source control, shared across environments, left alive for years. This section sets the hard rules.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What is the maximum validity period for a client ID/secret before mandatory rotation (e.g., 90 days, 180 days, 1 year)?</li>
+<li class="">Is it mandatory to use different client IDs and secrets across different subdomains or environments, and how is that enforced?</li>
+<li class="">Where must secrets be stored (secrets manager only — no config files, no source control)?</li>
+<li class="">Who can request a secret rotation, and what's the process if a secret is suspected to be compromised?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="9-redirect-uri--origin-requirements">9. Redirect URI &amp; Origin Requirements<a href="https://haxnation.github.io/blog/building-your-oidc-policy#9-redirect-uri--origin-requirements" class="hash-link" aria-label="Direct link to 9. Redirect URI &amp; Origin Requirements" title="Direct link to 9. Redirect URI &amp; Origin Requirements" translate="no">​</a></h2>
+<p>A loosely configured redirect URI is one of the most common ways OIDC integrations get exploited. This section makes the rules for what's allowed explicit rather than left to each developer's judgment.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Are wildcard redirect URIs allowed, or must every URI be registered as an exact match?</li>
+<li class="">How are redirect URIs handled across subdomains (does each subdomain need its own registered URI)?</li>
+<li class="">Is HTTPS mandatory for all redirect URIs, including internal apps?</li>
+<li class="">What's the process to add or change a registered redirect URI after go-live?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="10-authentication--mfa-requirements">10. Authentication &amp; MFA Requirements<a href="https://haxnation.github.io/blog/building-your-oidc-policy#10-authentication--mfa-requirements" class="hash-link" aria-label="Direct link to 10. Authentication &amp; MFA Requirements" title="Direct link to 10. Authentication &amp; MFA Requirements" translate="no">​</a></h2>
+<p>Not every login needs the same bar. This section ties directly back to the criticality tiers from section 5 — what's actually required (MFA method, adaptive/risk-based signals, network or location restrictions) at each level.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">At what criticality tier(s) is MFA mandatory, and which MFA methods are acceptable (authenticator app, hardware key, SMS — and is SMS banned for higher tiers)?</li>
+<li class="">Are risk-based/adaptive authentication signals required (impossible travel, new device, anomalous behavior patterns)?</li>
+<li class="">Are there location or network restrictions (e.g., block or step-up MFA for logins outside approved geographies or off-VPN)?</li>
+<li class="">Do these requirements differ for workforce vs. customer-facing applications?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="11-oidc-flow--protocol-requirements">11. OIDC Flow &amp; Protocol Requirements<a href="https://haxnation.github.io/blog/building-your-oidc-policy#11-oidc-flow--protocol-requirements" class="hash-link" aria-label="Direct link to 11. OIDC Flow &amp; Protocol Requirements" title="Direct link to 11. OIDC Flow &amp; Protocol Requirements" translate="no">​</a></h2>
+<p>There are several valid OAuth2/OIDC flows, but not all of them are safe for every client type. This section pins down which flow is mandatory and which are banned outright.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Is Authorization Code flow with PKCE mandatory for all client types, including confidential clients?</li>
+<li class="">Is the Implicit flow explicitly banned?</li>
+<li class="">What's required for server-to-server or headless scenarios (Client Credentials flow) — and who can approve its use?</li>
+<li class="">What minimum OIDC/OAuth2 library or SDK standards must integrations meet (no hand-rolled token validation, for example)?</li>
+</ul>
+<p><em>(Suggested table to include in your Word doc — copy and adapt to your client types):</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Client / Communication Type</th><th>Preferred OIDC Flow</th><th>Status</th><th>When to Use / Conditions</th><th>Notes / Requirements</th></tr></thead><tbody><tr><td><strong>Web app with backend</strong> (confidential client)</td><td><strong>Authorization Code + PKCE</strong></td><td><strong>Mandatory</strong></td><td>All interactive user logins where a server can keep a secret</td><td>PKCE required even for confidential clients; use <code>response_type=code</code>, validate <code>nonce</code>, <code>iss</code>, <code>aud</code>, <code>exp</code> via certified library</td></tr><tr><td><strong>Single-Page App (SPA)</strong> — browser</td><td><strong>Authorization Code + PKCE</strong> (no client secret)</td><td><strong>Mandatory</strong></td><td>Public client, JavaScript-only</td><td>Must use PKCE with <code>code_challenge</code>; no Implicit; refresh via rotation, store tokens in HttpOnly cookie or memory only — never <code>localStorage</code></td></tr><tr><td><strong>Native / Mobile app</strong> (iOS, Android, desktop)</td><td><strong>Authorization Code + PKCE</strong> via system browser / AppAuth</td><td><strong>Mandatory</strong></td><td>Public client on device</td><td>Use external user-agent (ASWebAuthenticationSession / Custom Tabs), not embedded WebView; PKCE + <code>state</code> required</td></tr><tr><td><strong>Server-to-server / Service account / Daemon</strong></td><td><strong>Client Credentials</strong></td><td><strong>Approved — Conditional</strong></td><td>No user present, backend-to-backend</td><td>Requires section 7 registration + security approval; separate <code>client_id</code> per env; scope-limited, mTLS or <code>private_key_jwt</code> preferred over shared secret</td></tr><tr><td><strong>Input-constrained / Device / CLI / Smart TV</strong></td><td><strong>Device Code</strong> (<code>urn:ietf:params:oauth:grant-type:device_code</code>)</td><td><strong>Approved — Conditional</strong></td><td>No browser/keyboard on device</td><td>Poll interval enforced; device verification URI shown on secondary device; short <code>device_code</code> lifetime; requires IAM team approval</td></tr><tr><td><strong>Any client type</strong></td><td><strong>Implicit Flow</strong> (<code>response_type=token id_token</code>)</td><td><strong>Banned</strong></td><td>Never</td><td>Returns tokens in URL fragment — leaks via referrer/history; use Authorization Code + PKCE instead</td></tr><tr><td><strong>Any client type</strong></td><td><strong>ROPC / Password Grant</strong></td><td><strong>Banned</strong></td><td>Never</td><td>Collecting passwords directly bypasses MFA/SSO and IdP controls; blocked at IdP policy level</td></tr></tbody></table>
+<blockquote>
+<p>Tip: If a flow isn't on the <strong>Mandatory</strong> or <strong>Approved — Conditional</strong> rows, treat it as banned. Conditional flows need an approved use case logged in section 7 and a re-review per section 16.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="12-claims-scopes--data-handling">12. Claims, Scopes &amp; Data Handling<a href="https://haxnation.github.io/blog/building-your-oidc-policy#12-claims-scopes--data-handling" class="hash-link" aria-label="Direct link to 12. Claims, Scopes &amp; Data Handling" title="Direct link to 12. Claims, Scopes &amp; Data Handling" translate="no">​</a></h2>
+<p>The token coming back from your IdP carries user data — and how much of it your application is allowed to persist locally is a real data-governance question, not just a technical one.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What data/claims are available via your approved OIDC provider(s) (e.g., name, email, employee ID, group membership)?</li>
+<li class="">What data from those claims <em>can</em> be stored in an application's local database, and for how long?</li>
+<li class="">What data must <em>never</em> be persisted at the application level and should only ever be read live from the token or IdP (e.g., group membership used for real-time authorization checks)?</li>
+<li class="">What scopes are apps allowed to request by default, and what requires explicit approval (e.g., broader profile or admin scopes)?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="13-token-management">13. Token Management<a href="https://haxnation.github.io/blog/building-your-oidc-policy#13-token-management" class="hash-link" aria-label="Direct link to 13. Token Management" title="Direct link to 13. Token Management" translate="no">​</a></h2>
+<p>Tokens that live too long, or that get validated incorrectly, quietly become long-term backdoors. This section defines lifetimes and validation rules so every integration behaves the same way.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What are the maximum lifetimes for access tokens, ID tokens, and refresh tokens?</li>
+<li class="">Is refresh token rotation mandatory?</li>
+<li class="">Where and how must tokens be stored client-side (e.g., HttpOnly secure cookies vs. local storage — is local storage banned)?</li>
+<li class="">What signature/audience/issuer validation is mandatory before a token is trusted?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="14-session--logout-management">14. Session &amp; Logout Management<a href="https://haxnation.github.io/blog/building-your-oidc-policy#14-session--logout-management" class="hash-link" aria-label="Direct link to 14. Session &amp; Logout Management" title="Direct link to 14. Session &amp; Logout Management" translate="no">​</a></h2>
+<p>Login is only half of session security — how a session ends matters just as much, especially across multiple connected applications.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What is the maximum session idle timeout and absolute session lifetime, and does it vary by criticality tier?</li>
+<li class="">Is single logout (SLO) required across applications sharing the same IdP session?</li>
+<li class="">Does the policy require front-channel or back-channel logout support from integrated apps?</li>
+<li class="">What happens to active sessions when a user's account is disabled or offboarded?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="15-logging--monitoring">15. Logging &amp; Monitoring<a href="https://haxnation.github.io/blog/building-your-oidc-policy#15-logging--monitoring" class="hash-link" aria-label="Direct link to 15. Logging &amp; Monitoring" title="Direct link to 15. Logging &amp; Monitoring" translate="no">​</a></h2>
+<p>If an authentication event isn't logged, it didn't happen — at least not in any way you can investigate later. This section defines the minimum audit trail.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Which authentication events must be logged (successful login, failed login, token issuance, token refresh, logout, consent grants)?</li>
+<li class="">Where do these logs need to flow (central SIEM, specific retention period)?</li>
+<li class="">Who is alerted on anomalies (repeated failures, impossible travel, spikes in token issuance)?</li>
+<li class="">What's the minimum log retention period, and does it vary by app criticality or regulatory requirement?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="16-vulnerability--security-testing">16. Vulnerability &amp; Security Testing<a href="https://haxnation.github.io/blog/building-your-oidc-policy#16-vulnerability--security-testing" class="hash-link" aria-label="Direct link to 16. Vulnerability &amp; Security Testing" title="Direct link to 16. Vulnerability &amp; Security Testing" translate="no">​</a></h2>
+<p>OIDC integrations are frequently misconfigured in ways automated scanners miss — this section sets the expectation for how and how often they get tested by a human.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Is a security review or penetration test mandatory before an OIDC integration goes to production?</li>
+<li class="">How often must integrations be re-tested (annually, on major changes, on criticality-tier basis)?</li>
+<li class="">Who performs testing — internal security team, external vendor, or both?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="17-lifecycle-management">17. Lifecycle Management<a href="https://haxnation.github.io/blog/building-your-oidc-policy#17-lifecycle-management" class="hash-link" aria-label="Direct link to 17. Lifecycle Management" title="Direct link to 17. Lifecycle Management" translate="no">​</a></h2>
+<p>Applications and their credentials aren't set up once and forgotten — they're onboarded, changed, and eventually retired, and each stage needs an owner and a process.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What's the process for decommissioning an application and revoking its OIDC credentials?</li>
+<li class="">How are orphaned or unused client registrations identified and cleaned up (regular audits)?</li>
+<li class="">What happens to credentials when an application owner leaves the organization?</li>
+<li class="">Is there a periodic (e.g., quarterly/annual) review of all registered applications against this policy?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="18-third-party-provider-requirements">18. Third-Party Provider Requirements<a href="https://haxnation.github.io/blog/building-your-oidc-policy#18-third-party-provider-requirements" class="hash-link" aria-label="Direct link to 18. Third-Party Provider Requirements" title="Direct link to 18. Third-Party Provider Requirements" translate="no">​</a></h2>
+<p>When the OIDC provider itself is a vendor, your organization inherits some of its risk. This section sets the bar that vendor has to clear.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What certifications or attestations are required of a third-party OIDC provider (SOC 2, ISO 27001, etc.)?</li>
+<li class="">What are the contractual breach-notification timelines required?</li>
+<li class="">What data residency or data processing requirements apply?</li>
+<li class="">What's the process to evaluate and approve a <em>new</em> third-party provider before it's added to section 4's approved list?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="19-availability--business-continuity">19. Availability &amp; Business Continuity<a href="https://haxnation.github.io/blog/building-your-oidc-policy#19-availability--business-continuity" class="hash-link" aria-label="Direct link to 19. Availability &amp; Business Continuity" title="Direct link to 19. Availability &amp; Business Continuity" translate="no">​</a></h2>
+<p>If your identity provider goes down, so does every application depending on it — unless you've planned for that.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What availability SLA is required of an approved OIDC provider?</li>
+<li class="">Is there a fallback authentication mechanism for critical applications if the primary IdP is unavailable, and who approves its use?</li>
+<li class="">How is an IdP outage detected and escalated?</li>
+<li class="">Is there a documented business continuity/disaster recovery plan specific to identity services?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="20-incident-management">20. Incident Management<a href="https://haxnation.github.io/blog/building-your-oidc-policy#20-incident-management" class="hash-link" aria-label="Direct link to 20. Incident Management" title="Direct link to 20. Incident Management" translate="no">​</a></h2>
+<p>When something goes wrong with authentication — a leaked secret, a compromised account, a misconfigured redirect URI exploited in the wild — the response can't be improvised in the moment.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What qualifies as an OIDC-related security incident that must be formally reported?</li>
+<li class="">What are the immediate containment steps (e.g., mandatory secret rotation, session invalidation) and who can execute them?</li>
+<li class="">Who must be notified, and within what timeframe?</li>
+<li class="">Is there a post-incident review requirement, and who owns it?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="21-raci">21. RACI<a href="https://haxnation.github.io/blog/building-your-oidc-policy#21-raci" class="hash-link" aria-label="Direct link to 21. RACI" title="Direct link to 21. RACI" translate="no">​</a></h2>
+<p>A policy without named owners is a suggestion. This matrix makes explicit who's Responsible, Accountable, Consulted, and Informed for each major OIDC activity.</p>
+<p>📝 <strong>Answer this:</strong></p>
+<ul>
+<li class="">Build your RACI matrix. Suggested rows (activities) to start from — adjust to your org:</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Activity</th><th>Responsible</th><th>Accountable</th><th>Consulted</th><th>Informed</th></tr></thead><tbody><tr><td>Selecting/approving OIDC providers</td><td></td><td></td><td></td><td></td></tr><tr><td>Registering new applications</td><td></td><td></td><td></td><td></td></tr><tr><td>Issuing client ID/secret</td><td></td><td></td><td></td><td></td></tr><tr><td>Rotating client secrets</td><td></td><td></td><td></td><td></td></tr><tr><td>Approving MFA/criticality exceptions</td><td></td><td></td><td></td><td></td></tr><tr><td>Monitoring auth logs</td><td></td><td></td><td></td><td></td></tr><tr><td>Responding to an incident</td><td></td><td></td><td></td><td></td></tr><tr><td>Reviewing/decommissioning stale apps</td><td></td><td></td><td></td><td></td></tr><tr><td>Approving policy exceptions</td><td></td><td></td><td></td><td></td></tr><tr><td>Reviewing this policy annually</td><td></td><td></td><td></td><td></td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="22-compliance--review-requirements">22. Compliance &amp; Review Requirements<a href="https://haxnation.github.io/blog/building-your-oidc-policy#22-compliance--review-requirements" class="hash-link" aria-label="Direct link to 22. Compliance &amp; Review Requirements" title="Direct link to 22. Compliance &amp; Review Requirements" translate="no">​</a></h2>
+<p>Your OIDC policy doesn't exist in isolation — it needs to satisfy whatever regulatory or contractual frameworks your organization is already bound by.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Which regulatory or compliance frameworks apply (GDPR, HIPAA, PCI-DSS, SOC 2, ISO 27001, others)?</li>
+<li class="">Are there specific clauses in those frameworks that directly constrain OIDC design choices (e.g., data residency, MFA mandates, log retention minimums)?</li>
+<li class="">Who is responsible for evidencing compliance during an audit?</li>
+<li class="">How often is a formal compliance review conducted against this policy?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="23-policy-review--version-control">23. Policy Review / Version Control<a href="https://haxnation.github.io/blog/building-your-oidc-policy#23-policy-review--version-control" class="hash-link" aria-label="Direct link to 23. Policy Review / Version Control" title="Direct link to 23. Policy Review / Version Control" translate="no">​</a></h2>
+<p>A policy that's never revisited quietly goes stale — new providers emerge, old threats change, and the org itself changes shape. This closing section commits to keeping it current.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Who owns this document and is responsible for keeping it current?</li>
+<li class="">On what cadence is it formally reviewed (annually, on major security incidents, on major provider changes)?</li>
+<li class="">Where does the version history live, and what does a version bump require (approval from whom)?</li>
+</ul>
+<p><em>(Suggested table to include in your Word doc:)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Summary of Changes</th></tr></thead><tbody><tr><td>0.1</td><td></td><td></td><td>Initial draft</td></tr></tbody></table>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-you-should-have-now">What you should have now<a href="https://haxnation.github.io/blog/building-your-oidc-policy#what-you-should-have-now" class="hash-link" aria-label="Direct link to What you should have now" title="Direct link to What you should have now" translate="no">​</a></h2>
+<p>If you worked through all 23 sections, your Word document is a first draft of a complete OIDC policy — every section named, every open question either answered or flagged for follow-up with the right stakeholder. The next step is the least exciting but most important one: get it in front of security, legal, and your app owners for review, then set the date for the first version-control entry in section 23.</p>]]></content>
+        <author>
+            <name>Ayushya Shah</name>
+            <uri>https://github.com/A-Y-U-S-H-Y-A</uri>
+        </author>
+        <category label="security" term="security"/>
+        <category label="identity" term="identity"/>
+        <category label="oidc" term="oidc"/>
+        <category label="sso" term="sso"/>
+        <category label="governance" term="governance"/>
+        <category label="policy" term="policy"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[The Hack Nobody Ordered: When OpenAI's Own Model Broke Into Hugging Face]]></title>
         <id>https://haxnation.github.io/blog/openai-hugging-face-exploitgym-incident</id>
