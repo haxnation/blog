@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="blog-wrapper blog-post-page plugin-blog plugin-id-default" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.1">
+<title data-rh="true">Building Your Org&#x27;s OIDC Policy: A Question-Led Guide | Haxnation Blog</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" property="og:url" content="https://haxnation.github.io/blog/pr-17/building-your-oidc-policy"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" name="keywords" content="Haxnation, blog, cybersecurity, hacking, development"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" name="og:type" content="website"><meta data-rh="true" property="og:title" content="Building Your Org&#x27;s OIDC Policy: A Question-Led Guide | Haxnation Blog"><meta data-rh="true" name="description" content="A section-by-section, question-led walkthrough for building your organization&#x27;s OpenID Connect (OIDC) policy from scratch."><meta data-rh="true" property="og:description" content="A section-by-section, question-led walkthrough for building your organization&#x27;s OpenID Connect (OIDC) policy from scratch."><meta data-rh="true" property="og:type" content="article"><meta data-rh="true" property="article:published_time" content="2026-09-12T09:00:00.000Z"><meta data-rh="true" property="article:author" content="https://github.com/A-Y-U-S-H-Y-A"><meta data-rh="true" property="article:tag" content="security,identity,oidc,sso,governance,policy"><link data-rh="true" rel="icon" href="/blog/pr-17/img/favicon.svg"><link data-rh="true" rel="canonical" href="https://haxnation.github.io/blog/pr-17/building-your-oidc-policy"><link data-rh="true" rel="alternate" href="https://haxnation.github.io/blog/pr-17/building-your-oidc-policy" hreflang="en"><link data-rh="true" rel="alternate" href="https://haxnation.github.io/blog/pr-17/building-your-oidc-policy" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://haxnation.github.io/blog/pr-17/building-your-oidc-policy","mainEntityOfPage":"https://haxnation.github.io/blog/pr-17/building-your-oidc-policy","url":"https://haxnation.github.io/blog/pr-17/building-your-oidc-policy","headline":"Building Your Org's OIDC Policy: A Question-Led Guide","name":"Building Your Org's OIDC Policy: A Question-Led Guide","description":"A section-by-section, question-led walkthrough for building your organization's OpenID Connect (OIDC) policy from scratch.","datePublished":"2026-09-12T09:00:00.000Z","author":{"@type":"Person","name":"Ayushya Shah","description":"Founder @ Haxnation","url":"https://github.com/A-Y-U-S-H-Y-A","image":"https://github.com/A-Y-U-S-H-Y-A.png"},"keywords":[],"isPartOf":{"@type":"Blog","@id":"https://haxnation.github.io/blog/pr-17/","name":"Haxnation Blog"}}</script><link rel="alternate" type="application/rss+xml" href="/blog/pr-17/rss.xml" title="Haxnation Blog RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/pr-17/atom.xml" title="Haxnation Blog Atom Feed">
+<link rel="alternate" type="application/json" href="/blog/pr-17/feed.json" title="Haxnation Blog JSON Feed">
+
+
+
+
+
+
+
+<script>!function(e,t,n,a,c,r,s){e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(arguments)},(r=t.createElement(a)).async=1,r.src="https://www.clarity.ms/tag/yhnl14eoha",(s=t.getElementsByTagName(a)[0]).parentNode.insertBefore(r,s)}(window,document,"clarity","script")</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css" integrity="sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM" crossorigin="anonymous"><link rel="stylesheet" href="/blog/pr-17/assets/css/styles.1ee47531.css">
+<script src="/blog/pr-17/assets/js/runtime~main.08590852.js" defer="defer"></script>
+<script src="/blog/pr-17/assets/js/main.8d542134.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const a=new URLSearchParams(window.location.search).entries();for(var[t,e]of a)if(t.startsWith("docusaurus-data-")){var n=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(n,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss")}catch(t){}return!1}())</script><div id="__docusaurus"><link rel="preload" as="image" href="/blog/pr-17/img/logo.png"><link rel="preload" as="image" href="/blog/pr-17/img/logo_dark.png"><link rel="preload" as="image" href="https://github.com/A-Y-U-S-H-Y-A.png"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style="background-color:#0b0b0b;color:#5ce1e6" role="banner"><div class="announcementBarPlaceholder_vyr4"></div><div class="content_knG7 announcementBarContent_xLdY">// HAXNATION.BLOG — Offline meetups, CTFs and more. <a href="https://haxnation.org/mumbai" target="_blank">[ JOIN OUR WHATSAPP GROUPS ]</a></div><button type="button" aria-label="Close" class="clean-btn close closeButton_CVFx announcementBarClose_gvF7"><svg viewBox="0 0 15 15" width="14" height="14"><g stroke="currentColor" stroke-width="3.1"><path d="M.75.75l13.5 13.5M14.25.75L.75 14.25"></path></g></svg></button></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/blog/pr-17/"><div class="navbar__logo"><img src="/blog/pr-17/img/logo.png" alt="Haxnation Logo" class="themedComponent_mlkZ themedComponent--light_NVdE" style="height:32px;width:auto"><img src="/blog/pr-17/img/logo_dark.png" alt="Haxnation Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU" style="height:32px;width:auto"></div><b class="navbar__title text--truncate"></b></a><a class="navbar__item navbar__link" href="/blog/pr-17/">Blog</a><a class="navbar__item navbar__link" href="/blog/pr-17/tags">Tags</a><a class="navbar__item navbar__link" href="/blog/pr-17/archive">Archive</a><a class="navbar__item navbar__link" href="/blog/pr-17/authors">Authors</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://Haxnation.org" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">Main Site<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><a href="https://github.com/haxnation/blog" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="Search" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="container margin-vert--lg"><div class="row"><aside class="col col--3"><nav class="thin-scrollbar hax-blog-sidebar-nav" aria-label="Blog recent posts navigation"><div class="blogSidebarTitle_hax margin-bottom--md hax-blog-sidebar-title"><span>Recent Posts</span><button type="button" class="hax-blog-sidebar-toggle" aria-expanded="true" aria-label="Collapse Recent Posts sidebar" title="Collapse Recent Posts">[-]</button></div><div role="group"><h3 class="hax-blog-sidebar-year">2026</h3><ul class="clean-list hax-blog-sidebar-list"><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/2026/09/14/param-jasani/misc/interactive-mdx-animations">New feature additions to Haxnation Blogs Platform</a></li><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/htb-mumbai-meetup-19-summary">Summary of HTB Mumbai Meetup held on 12th September 2026</a></li><li class="blogSidebarItem_hax"><a aria-current="page" class="hax-blog-sidebar-link hax-blog-sidebar-link--active" href="/blog/pr-17/building-your-oidc-policy">Building Your Org&#x27;s OIDC Policy: A Question-Led Guide</a></li><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/openai-hugging-face-exploitgym-incident">The Hack Nobody Ordered: When OpenAI&#x27;s Own Model Broke Into Hugging Face</a></li><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/ti">How intelligently, intelligent people do threat intelligence?</a></li><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/haxnation-mumbai-meetup-june26-summary">Summary of Haxnation Mumbai Meetup held on 27th June 2026</a></li><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/htb-mumbai-meetup-18-summary">Summary of HTB Mumbai Meetup held on 01st August 2026</a></li><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/vulnerability-management">Surviving CERT-In&#x27;s 12-Hour SLA Without Mythos</a></li><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/antisyphon-training-thrunting-summit-2026-summary">Summary of Antisyphon Training - Threat Hunting Summit 2026</a></li><li class="blogSidebarItem_hax"><a class="hax-blog-sidebar-link" href="/blog/pr-17/breachforce-mumbai-meetup-june26-summary">Summary of Breachforce Meetup, Mumbai held on 21st June 2026</a></li></ul></div></nav></aside><main class="col col--7"><article class=""><header><h1 class="title_f1Hy">Building Your Org&#x27;s OIDC Policy: A Question-Led Guide</h1><div class="container_mt6G margin-vert--md"><time datetime="2026-09-12T09:00:00.000Z">September 12, 2026</time> · <!-- -->16 min read</div><div class="margin-top--md margin-bottom--sm row"><div class="col col--12 authorCol_Hf19"><div class="avatar margin-bottom--sm"><a href="https://github.com/A-Y-U-S-H-Y-A" target="_blank" rel="noopener noreferrer" class="avatar__photo-link"><img class="avatar__photo authorImage_XqGP" src="https://github.com/A-Y-U-S-H-Y-A.png" alt="Ayushya Shah"></a><div class="avatar__intro authorDetails_lV9A"><div class="avatar__name"><a href="https://github.com/A-Y-U-S-H-Y-A" target="_blank" rel="noopener noreferrer"><span class="authorName_yefp" translate="no">Ayushya Shah</span></a></div><small class="authorTitle_nd0D" title="Founder @ Haxnation">Founder @ Haxnation</small><div class="authorSocials_rSDt"><a href="https://github.com/A-Y-U-S-H-Y-A" target="_blank" rel="noopener noreferrer" class="authorSocialLink_owbf" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 250" preserveAspectRatio="xMidYMid" style="--dark:#000;--light:#fff" class="authorSocialIcon_XYv3 githubSvg_Uu4N"><path d="M128.001 0C57.317 0 0 57.307 0 128.001c0 56.554 36.676 104.535 87.535 121.46 6.397 1.185 8.746-2.777 8.746-6.158 0-3.052-.12-13.135-.174-23.83-35.61 7.742-43.124-15.103-43.124-15.103-5.823-14.795-14.213-18.73-14.213-18.73-11.613-7.944.876-7.78.876-7.78 12.853.902 19.621 13.19 19.621 13.19 11.417 19.568 29.945 13.911 37.249 10.64 1.149-8.272 4.466-13.92 8.127-17.116-28.431-3.236-58.318-14.212-58.318-63.258 0-13.975 5-25.394 13.188-34.358-1.329-3.224-5.71-16.242 1.24-33.874 0 0 10.749-3.44 35.21 13.121 10.21-2.836 21.16-4.258 32.038-4.307 10.878.049 21.837 1.47 32.066 4.307 24.431-16.56 35.165-13.12 35.165-13.12 6.967 17.63 2.584 30.65 1.255 33.873 8.207 8.964 13.173 20.383 13.173 34.358 0 49.163-29.944 59.988-58.447 63.157 4.591 3.972 8.682 11.762 8.682 23.704 0 17.126-.148 30.91-.148 35.126 0 3.407 2.304 7.398 8.792 6.14C219.37 232.5 256 184.537 256 128.002 256 57.307 198.691 0 128.001 0Zm-80.06 182.34c-.282.636-1.283.827-2.194.39-.929-.417-1.45-1.284-1.15-1.922.276-.655 1.279-.838 2.205-.399.93.418 1.46 1.293 1.139 1.931Zm6.296 5.618c-.61.566-1.804.303-2.614-.591-.837-.892-.994-2.086-.375-2.66.63-.566 1.787-.301 2.626.591.838.903 1 2.088.363 2.66Zm4.32 7.188c-.785.545-2.067.034-2.86-1.104-.784-1.138-.784-2.503.017-3.05.795-.547 2.058-.055 2.861 1.075.782 1.157.782 2.522-.019 3.08Zm7.304 8.325c-.701.774-2.196.566-3.29-.49-1.119-1.032-1.43-2.496-.726-3.27.71-.776 2.213-.558 3.315.49 1.11 1.03 1.45 2.505.701 3.27Zm9.442 2.81c-.31 1.003-1.75 1.459-3.199 1.033-1.448-.439-2.395-1.613-2.103-2.626.301-1.01 1.747-1.484 3.207-1.028 1.446.436 2.396 1.602 2.095 2.622Zm10.744 1.193c.036 1.055-1.193 1.93-2.715 1.95-1.53.034-2.769-.82-2.786-1.86 0-1.065 1.202-1.932 2.733-1.958 1.522-.03 2.768.818 2.768 1.868Zm10.555-.405c.182 1.03-.875 2.088-2.387 2.37-1.485.271-2.861-.365-3.05-1.386-.184-1.056.893-2.114 2.376-2.387 1.514-.263 2.868.356 3.061 1.403Z"></path></svg></a></div></div></div></div></div></header><div id="__blog-post-container" class="markdown"><p>Most companies don&#x27;t have an OIDC problem because nobody understands OpenID Connect. They have one because nobody ever wrote down the <em>decisions</em>: which provider, which apps, who owns the credentials, how long a secret should live, what happens when someone forgets to rotate one. The protocol is standardized. Your organization&#x27;s choices around it are not, until you write them down.</p>
+<p>This guide is built to be answered, not just read. Every section below explains <em>why</em> that piece of a policy matters, then hands you a short list of questions. Open a blank Word document next to this post, work through the sections in order, and by the end you&#x27;ll have a first draft of a real OIDC policy, not a template with the blanks still in it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-to-use-this-guide">How to use this guide<a href="#how-to-use-this-guide" class="hash-link" aria-label="Direct link to How to use this guide" title="Direct link to How to use this guide" translate="no">​</a></h2>
+<p>Keep this post open in one window and Microsoft Word (or your editor of choice) open beside it. For each section:</p>
+<ol>
+<li class="">Read the short explainer — it tells you what the section is for and why it matters.</li>
+<li class="">Answer the 📝 questions directly in your Word document, under a heading matching the section number and title below (<code>1. Purpose</code>, <code>2. Scope</code>, and so on).</li>
+<li class="">Don&#x27;t worry about polish on the first pass. A rough answer you can tighten later beats a blank section.</li>
+</ol>
+<p>By section 23, your Word document <em>is</em> your draft policy mirroring the structure below.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-purpose">1. Purpose<a href="#1-purpose" class="hash-link" aria-label="Direct link to 1. Purpose" title="Direct link to 1. Purpose" translate="no">​</a></h2>
+<p>Every policy needs a reason to exist, stated plainly enough that someone reading it two years from now, after the person who wrote it has left, still understands why it&#x27;s there. This section is the &quot;why,&quot; in a paragraph or two: what risk or inconsistency this policy is closing, and what &quot;success&quot; looks like once it&#x27;s followed.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What specific problem is this policy solving (inconsistent OIDC use, past incident, audit finding, new regulatory pressure)?</li>
+<li class="">What triggered writing this policy now?</li>
+<li class="">Who is the executive sponsor or owning function (CISO, Head of IAM, Platform Engineering)?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-scope">2. Scope<a href="#2-scope" class="hash-link" aria-label="Direct link to 2. Scope" title="Direct link to 2. Scope" translate="no">​</a></h2>
+<p>Scope draws the line around what this policy governs and — just as importantly — what it doesn&#x27;t. A policy that tries to cover everything usually ends up enforced nowhere.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Does this apply to workforce (employee) authentication, customer-facing authentication, or both?</li>
+<li class="">Which environments are covered: production only, or also staging/dev/test, only internal systems, only external ones or both?</li>
+<li class="">Which business units, subsidiaries, or acquired companies are in scope?</li>
+<li class="">What&#x27;s explicitly out of scope (e.g., legacy SAML apps mid-migration, machine-to-machine/service auth, mainframe auth)?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-definitions">3. Definitions<a href="#3-definitions" class="hash-link" aria-label="Direct link to 3. Definitions" title="Direct link to 3. Definitions" translate="no">​</a></h2>
+<p>A shared glossary prevents arguments later about what &quot;client&quot; or &quot;criticality&quot; means. Define the standard OIDC/OAuth2 vocabulary once, then add any terms specific to your organization.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Do you need org-specific definitions for terms like &quot;application criticality tier,&quot; &quot;internal network,&quot; or &quot;approved provider&quot; that will be used later in this policy?</li>
+<li class="">Are there internal team names or system names (e.g., your IAM platform&#x27;s internal codename) that need defining for readers outside that team?</li>
+</ul>
+<p><em>(Standard terms to include as-is: OIDC, OAuth 2.0, Identity Provider (IdP), Relying Party (RP)/Client, Client ID, Client Secret, Access Token, ID Token, Refresh Token, Scopes, Claims, PKCE, JWKS, Discovery Document, Redirect URI.)</em></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-approved-oidc-providers--applicability">4. Approved OIDC Providers &amp; Applicability<a href="#4-approved-oidc-providers--applicability" class="hash-link" aria-label="Direct link to 4. Approved OIDC Providers &amp; Applicability" title="Direct link to 4. Approved OIDC Providers &amp; Applicability" translate="no">​</a></h2>
+<p>This is the <em>allow-list</em> of identity providers your organization actually permits — not every provider that exists — <strong>and</strong> where each one is allowed to be used. Naming this explicitly stops individual teams from quietly standing up their own IdP, while mapping providers to application boundaries (internet-only, internal-only, hybrid, cloud/data-centre) ensures an internet-facing customer portal and an internal finance tool don&#x27;t get the same default despite very different threat models.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Is there a preferred (primary/default) OIDC supplier for the organization?</li>
+<li class="">Which other providers are approved for specific cases, and why (e.g., a specific vendor for customer-facing apps, another for workforce SSO)?</li>
+<li class="">Is there a provider that is explicitly <em>disallowed</em> and why?</li>
+<li class="">What application boundary categories exist in your environment (e.g., internet-only, internal-only, internet-facing app connecting to internal services, specific cloud provider, specific data centre)?</li>
+<li class="">For each boundary category, is there a preferred or mandatory OIDC provider?</li>
+<li class="">Are there use cases where OIDC is <em>not</em> the right fit (e.g., legacy systems, B2B federation, service accounts) and what&#x27;s used instead?</li>
+</ul>
+<p><em>(Suggested table to include in your Word doc — copy and adapt to your org):</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Provider</th><th>Status</th><th>Intended Use Case / Scope</th><th>Justification / Notes</th></tr></thead><tbody><tr><td>Example: Microsoft Entra ID (Azure AD)</td><td><strong>Primary / Preferred</strong></td><td>Workforce SSO, internal apps, M365-integrated services</td><td>Default for all employee-facing auth; covered by existing E5 licensing and conditional access policies</td></tr><tr><td>Example: Okta (Customer Identity)</td><td><strong>Approved</strong></td><td>Customer-facing web &amp; mobile apps (internet-only)</td><td>Required for CIAM use cases needing self-service registration and social federation</td></tr><tr><td>Example: Auth0 by Okta</td><td><strong>Approved — Conditional</strong></td><td>Legacy customer portal (until Q4 2027 migration)</td><td>Grandfathered; no new apps to onboard here — migrate to Okta CIAM</td></tr><tr><td>Example: Google Identity Platform</td><td><strong>Disallowed</strong></td><td>—</td><td>Not approved due to data residency and contractual gaps; exception requires CISO + Legal risk acceptance</td></tr><tr><td><em>Your Provider 1</em></td><td>Primary / Approved / Disallowed</td><td><em>e.g., Internal-only apps</em></td><td><em>Why this status</em></td></tr><tr><td><em>Your Provider 2</em></td><td>Primary / Approved / Disallowed</td><td><em>e.g., Specific business unit or cloud</em></td><td><em>Why this status</em></td></tr></tbody></table>
+<blockquote>
+<p>Tip: Keep this table as the single source of truth. If a provider isn&#x27;t on this list, it&#x27;s not approved — teams must submit a request per section 18 before integrating.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-application-classification">5. Application Classification<a href="#5-application-classification" class="hash-link" aria-label="Direct link to 5. Application Classification" title="Direct link to 5. Application Classification" translate="no">​</a></h2>
+<p>Not every application deserves the same level of authentication rigor. Defining criticality tiers up front lets every later section (MFA, token lifetime, logging) simply say &quot;per the app&#x27;s tier&quot; instead of repeating itself.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What criticality tiers will you use (e.g., Critical / High / Standard / Low)?</li>
+<li class="">What factors determine an app&#x27;s tier — data sensitivity, user base size, regulatory scope, revenue impact?</li>
+<li class="">Who assigns and approves an application&#x27;s tier — the app owner, security team, or both?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-provider-selection-matrix">6. Provider Selection Matrix<a href="#6-provider-selection-matrix" class="hash-link" aria-label="Direct link to 6. Provider Selection Matrix" title="Direct link to 6. Provider Selection Matrix" translate="no">​</a></h2>
+<p>Where section 4 names the approved providers, this section turns that list into a decision tool: given an application&#x27;s boundary type and criticality tier, which provider should a team actually pick, and in what order of preference?</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What is the priority order of approved OIDC suppliers (first choice, second choice, fallback)?</li>
+<li class="">Does the priority order change based on application boundary (internet vs. internal vs. hybrid) or cloud/data-centre placement?</li>
+<li class="">Is there a documented matrix (boundary type × criticality tier → preferred provider) that teams can self-serve from?</li>
+</ul>
+<p><em>(Suggested table to include in your Word doc — copy and adapt to your tiers/boundaries from sections 4–5):</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Boundary Type \ Criticality Tier</th><th><strong>Critical</strong></th><th><strong>High</strong></th><th><strong>Standard</strong></th><th><strong>Low</strong></th></tr></thead><tbody><tr><td><strong>Internet-only</strong> (customer-facing, public)</td><td><strong>Okta CIAM (Primary)</strong> — Entra ID not permitted</td><td><strong>Okta CIAM (Primary)</strong></td><td><strong>Okta CIAM (Primary)</strong></td><td><strong>Okta CIAM</strong> or Entra ID (if workforce tool)</td></tr><tr><td><strong>Internal-only</strong> (corp network / VPN, workforce)</td><td><strong>Entra ID (Primary)</strong> — HSM-backed key req.</td><td><strong>Entra ID (Primary)</strong></td><td><strong>Entra ID (Primary)</strong></td><td><strong>Entra ID (Primary)</strong></td></tr><tr><td><strong>Hybrid</strong> (internet-facing app → internal API/service)</td><td><strong>Entra ID (Primary)</strong> + Okta for external users — separate clients</td><td><strong>Entra ID (Primary)</strong> — Okta (Fallback for B2C)</td><td><strong>Entra ID (Preferred)</strong> / Okta (Allowed with approval)</td><td><strong>Either</strong> — per data sensitivity</td></tr><tr><td><strong>Cloud / Data-centre specific</strong> <em>(if applicable)</em></td><td><em>e.g., AWS-hosted Critical → Entra ID</em></td><td><em>e.g., DC2 High → Entra ID</em></td><td><em>e.g., Standard → Entra ID</em></td><td><em>e.g., Low → Entra ID</em></td></tr></tbody></table>
+<blockquote>
+<p>How to use it: Find your boundary row and criticality column (tiers defined in section 5). The cell tells you the mandatory/expected IdP from section 4. Anything off-matrix requires a documented exception per your exception process. Add or remove rows/columns to match your actual boundaries and tiers — this exact shape is just an example.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-application-registration">7. Application Registration<a href="#7-application-registration" class="hash-link" aria-label="Direct link to 7. Application Registration" title="Direct link to 7. Application Registration" translate="no">​</a></h2>
+<p>Someone has to actually issue the client ID and secret. If that person or team isn&#x27;t named, every app team either finds their own workaround or waits indefinitely.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Who is the person, team, or ticketing queue to contact to register a new application and obtain OIDC credentials?</li>
+<li class="">What information must an app team provide at registration (app name, owner, criticality tier, redirect URIs, environment)?</li>
+<li class="">Is there a self-service portal, or is this always a manual request?</li>
+<li class="">What is the expected turnaround time (SLA) for issuing credentials?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="8-client-id--secret-management">8. Client ID &amp; Secret Management<a href="#8-client-id--secret-management" class="hash-link" aria-label="Direct link to 8. Client ID &amp; Secret Management" title="Direct link to 8. Client ID &amp; Secret Management" translate="no">​</a></h2>
+<p>Client secrets are effectively passwords for applications, and they&#x27;re routinely mishandled — checked into source control, shared across environments, left alive for years. This section sets the hard rules.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What is the maximum validity period for a client ID/secret before mandatory rotation (e.g., 90 days, 180 days, 1 year)?</li>
+<li class="">Is it mandatory to use different client IDs and secrets across different subdomains or environments, and how is that enforced?</li>
+<li class="">Where must secrets be stored (secrets manager only — no config files, no source control)?</li>
+<li class="">Who can request a secret rotation, and what&#x27;s the process if a secret is suspected to be compromised?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="9-redirect-uri--origin-requirements">9. Redirect URI &amp; Origin Requirements<a href="#9-redirect-uri--origin-requirements" class="hash-link" aria-label="Direct link to 9. Redirect URI &amp; Origin Requirements" title="Direct link to 9. Redirect URI &amp; Origin Requirements" translate="no">​</a></h2>
+<p>A loosely configured redirect URI is one of the most common ways OIDC integrations get exploited. This section makes the rules for what&#x27;s allowed explicit rather than left to each developer&#x27;s judgment.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Are wildcard redirect URIs allowed, or must every URI be registered as an exact match?</li>
+<li class="">How are redirect URIs handled across subdomains (does each subdomain need its own registered URI)?</li>
+<li class="">Is HTTPS mandatory for all redirect URIs, including internal apps?</li>
+<li class="">What&#x27;s the process to add or change a registered redirect URI after go-live?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="10-authentication--mfa-requirements">10. Authentication &amp; MFA Requirements<a href="#10-authentication--mfa-requirements" class="hash-link" aria-label="Direct link to 10. Authentication &amp; MFA Requirements" title="Direct link to 10. Authentication &amp; MFA Requirements" translate="no">​</a></h2>
+<p>Not every login needs the same bar. This section ties directly back to the criticality tiers from section 5 — what&#x27;s actually required (MFA method, adaptive/risk-based signals, network or location restrictions) at each level.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">At what criticality tier(s) is MFA mandatory, and which MFA methods are acceptable (authenticator app, hardware key, SMS — and is SMS banned for higher tiers)?</li>
+<li class="">Are risk-based/adaptive authentication signals required (impossible travel, new device, anomalous behavior patterns)?</li>
+<li class="">Are there location or network restrictions (e.g., block or step-up MFA for logins outside approved geographies or off-VPN)?</li>
+<li class="">Do these requirements differ for workforce vs. customer-facing applications?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="11-oidc-flow--protocol-requirements">11. OIDC Flow &amp; Protocol Requirements<a href="#11-oidc-flow--protocol-requirements" class="hash-link" aria-label="Direct link to 11. OIDC Flow &amp; Protocol Requirements" title="Direct link to 11. OIDC Flow &amp; Protocol Requirements" translate="no">​</a></h2>
+<p>There are several valid OAuth2/OIDC flows, but not all of them are safe for every client type. This section pins down which flow is mandatory and which are banned outright.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Is Authorization Code flow with PKCE mandatory for all client types, including confidential clients?</li>
+<li class="">Is the Implicit flow explicitly banned?</li>
+<li class="">What&#x27;s required for server-to-server or headless scenarios (Client Credentials flow) — and who can approve its use?</li>
+<li class="">What minimum OIDC/OAuth2 library or SDK standards must integrations meet (no hand-rolled token validation, for example)?</li>
+</ul>
+<p><em>(Suggested table to include in your Word doc — copy and adapt to your client types):</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Client / Communication Type</th><th>Preferred OIDC Flow</th><th>Status</th><th>When to Use / Conditions</th><th>Notes / Requirements</th></tr></thead><tbody><tr><td><strong>Web app with backend</strong> (confidential client)</td><td><strong>Authorization Code + PKCE</strong></td><td><strong>Mandatory</strong></td><td>All interactive user logins where a server can keep a secret</td><td>PKCE required even for confidential clients; use <code>response_type=code</code>, validate <code>nonce</code>, <code>iss</code>, <code>aud</code>, <code>exp</code> via certified library</td></tr><tr><td><strong>Single-Page App (SPA)</strong> — browser</td><td><strong>Authorization Code + PKCE</strong> (no client secret)</td><td><strong>Mandatory</strong></td><td>Public client, JavaScript-only</td><td>Must use PKCE with <code>code_challenge</code>; no Implicit; refresh via rotation, store tokens in HttpOnly cookie or memory only — never <code>localStorage</code></td></tr><tr><td><strong>Native / Mobile app</strong> (iOS, Android, desktop)</td><td><strong>Authorization Code + PKCE</strong> via system browser / AppAuth</td><td><strong>Mandatory</strong></td><td>Public client on device</td><td>Use external user-agent (ASWebAuthenticationSession / Custom Tabs), not embedded WebView; PKCE + <code>state</code> required</td></tr><tr><td><strong>Server-to-server / Service account / Daemon</strong></td><td><strong>Client Credentials</strong></td><td><strong>Approved — Conditional</strong></td><td>No user present, backend-to-backend</td><td>Requires section 7 registration + security approval; separate <code>client_id</code> per env; scope-limited, mTLS or <code>private_key_jwt</code> preferred over shared secret</td></tr><tr><td><strong>Input-constrained / Device / CLI / Smart TV</strong></td><td><strong>Device Code</strong> (<code>urn:ietf:params:oauth:grant-type:device_code</code>)</td><td><strong>Approved — Conditional</strong></td><td>No browser/keyboard on device</td><td>Poll interval enforced; device verification URI shown on secondary device; short <code>device_code</code> lifetime; requires IAM team approval</td></tr><tr><td><strong>Any client type</strong></td><td><strong>Implicit Flow</strong> (<code>response_type=token id_token</code>)</td><td><strong>Banned</strong></td><td>Never</td><td>Returns tokens in URL fragment — leaks via referrer/history; use Authorization Code + PKCE instead</td></tr><tr><td><strong>Any client type</strong></td><td><strong>ROPC / Password Grant</strong></td><td><strong>Banned</strong></td><td>Never</td><td>Collecting passwords directly bypasses MFA/SSO and IdP controls; blocked at IdP policy level</td></tr></tbody></table>
+<blockquote>
+<p>Tip: If a flow isn&#x27;t on the <strong>Mandatory</strong> or <strong>Approved — Conditional</strong> rows, treat it as banned. Conditional flows need an approved use case logged in section 7 and a re-review per section 16.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="12-claims-scopes--data-handling">12. Claims, Scopes &amp; Data Handling<a href="#12-claims-scopes--data-handling" class="hash-link" aria-label="Direct link to 12. Claims, Scopes &amp; Data Handling" title="Direct link to 12. Claims, Scopes &amp; Data Handling" translate="no">​</a></h2>
+<p>The token coming back from your IdP carries user data — and how much of it your application is allowed to persist locally is a real data-governance question, not just a technical one.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What data/claims are available via your approved OIDC provider(s) (e.g., name, email, employee ID, group membership)?</li>
+<li class="">What data from those claims <em>can</em> be stored in an application&#x27;s local database, and for how long?</li>
+<li class="">What data must <em>never</em> be persisted at the application level and should only ever be read live from the token or IdP (e.g., group membership used for real-time authorization checks)?</li>
+<li class="">What scopes are apps allowed to request by default, and what requires explicit approval (e.g., broader profile or admin scopes)?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="13-token-management">13. Token Management<a href="#13-token-management" class="hash-link" aria-label="Direct link to 13. Token Management" title="Direct link to 13. Token Management" translate="no">​</a></h2>
+<p>Tokens that live too long, or that get validated incorrectly, quietly become long-term backdoors. This section defines lifetimes and validation rules so every integration behaves the same way.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What are the maximum lifetimes for access tokens, ID tokens, and refresh tokens?</li>
+<li class="">Is refresh token rotation mandatory?</li>
+<li class="">Where and how must tokens be stored client-side (e.g., HttpOnly secure cookies vs. local storage — is local storage banned)?</li>
+<li class="">What signature/audience/issuer validation is mandatory before a token is trusted?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="14-session--logout-management">14. Session &amp; Logout Management<a href="#14-session--logout-management" class="hash-link" aria-label="Direct link to 14. Session &amp; Logout Management" title="Direct link to 14. Session &amp; Logout Management" translate="no">​</a></h2>
+<p>Login is only half of session security — how a session ends matters just as much, especially across multiple connected applications.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What is the maximum session idle timeout and absolute session lifetime, and does it vary by criticality tier?</li>
+<li class="">Is single logout (SLO) required across applications sharing the same IdP session?</li>
+<li class="">Does the policy require front-channel or back-channel logout support from integrated apps?</li>
+<li class="">What happens to active sessions when a user&#x27;s account is disabled or offboarded?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="15-logging--monitoring">15. Logging &amp; Monitoring<a href="#15-logging--monitoring" class="hash-link" aria-label="Direct link to 15. Logging &amp; Monitoring" title="Direct link to 15. Logging &amp; Monitoring" translate="no">​</a></h2>
+<p>If an authentication event isn&#x27;t logged, it didn&#x27;t happen — at least not in any way you can investigate later. This section defines the minimum audit trail.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Which authentication events must be logged (successful login, failed login, token issuance, token refresh, logout, consent grants)?</li>
+<li class="">Where do these logs need to flow (central SIEM, specific retention period)?</li>
+<li class="">Who is alerted on anomalies (repeated failures, impossible travel, spikes in token issuance)?</li>
+<li class="">What&#x27;s the minimum log retention period, and does it vary by app criticality or regulatory requirement?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="16-vulnerability--security-testing">16. Vulnerability &amp; Security Testing<a href="#16-vulnerability--security-testing" class="hash-link" aria-label="Direct link to 16. Vulnerability &amp; Security Testing" title="Direct link to 16. Vulnerability &amp; Security Testing" translate="no">​</a></h2>
+<p>OIDC integrations are frequently misconfigured in ways automated scanners miss — this section sets the expectation for how and how often they get tested by a human.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Is a security review or penetration test mandatory before an OIDC integration goes to production?</li>
+<li class="">How often must integrations be re-tested (annually, on major changes, on criticality-tier basis)?</li>
+<li class="">Who performs testing — internal security team, external vendor, or both?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="17-lifecycle-management">17. Lifecycle Management<a href="#17-lifecycle-management" class="hash-link" aria-label="Direct link to 17. Lifecycle Management" title="Direct link to 17. Lifecycle Management" translate="no">​</a></h2>
+<p>Applications and their credentials aren&#x27;t set up once and forgotten — they&#x27;re onboarded, changed, and eventually retired, and each stage needs an owner and a process.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What&#x27;s the process for decommissioning an application and revoking its OIDC credentials?</li>
+<li class="">How are orphaned or unused client registrations identified and cleaned up (regular audits)?</li>
+<li class="">What happens to credentials when an application owner leaves the organization?</li>
+<li class="">Is there a periodic (e.g., quarterly/annual) review of all registered applications against this policy?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="18-third-party-provider-requirements">18. Third-Party Provider Requirements<a href="#18-third-party-provider-requirements" class="hash-link" aria-label="Direct link to 18. Third-Party Provider Requirements" title="Direct link to 18. Third-Party Provider Requirements" translate="no">​</a></h2>
+<p>When the OIDC provider itself is a vendor, your organization inherits some of its risk. This section sets the bar that vendor has to clear.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What certifications or attestations are required of a third-party OIDC provider (SOC 2, ISO 27001, etc.)?</li>
+<li class="">What are the contractual breach-notification timelines required?</li>
+<li class="">What data residency or data processing requirements apply?</li>
+<li class="">What&#x27;s the process to evaluate and approve a <em>new</em> third-party provider before it&#x27;s added to section 4&#x27;s approved list?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="19-availability--business-continuity">19. Availability &amp; Business Continuity<a href="#19-availability--business-continuity" class="hash-link" aria-label="Direct link to 19. Availability &amp; Business Continuity" title="Direct link to 19. Availability &amp; Business Continuity" translate="no">​</a></h2>
+<p>If your identity provider goes down, so does every application depending on it — unless you&#x27;ve planned for that.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What availability SLA is required of an approved OIDC provider?</li>
+<li class="">Is there a fallback authentication mechanism for critical applications if the primary IdP is unavailable, and who approves its use?</li>
+<li class="">How is an IdP outage detected and escalated?</li>
+<li class="">Is there a documented business continuity/disaster recovery plan specific to identity services?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="20-incident-management">20. Incident Management<a href="#20-incident-management" class="hash-link" aria-label="Direct link to 20. Incident Management" title="Direct link to 20. Incident Management" translate="no">​</a></h2>
+<p>When something goes wrong with authentication — a leaked secret, a compromised account, a misconfigured redirect URI exploited in the wild — the response can&#x27;t be improvised in the moment.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">What qualifies as an OIDC-related security incident that must be formally reported?</li>
+<li class="">What are the immediate containment steps (e.g., mandatory secret rotation, session invalidation) and who can execute them?</li>
+<li class="">Who must be notified, and within what timeframe?</li>
+<li class="">Is there a post-incident review requirement, and who owns it?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="21-raci">21. RACI<a href="#21-raci" class="hash-link" aria-label="Direct link to 21. RACI" title="Direct link to 21. RACI" translate="no">​</a></h2>
+<p>A policy without named owners is a suggestion. This matrix makes explicit who&#x27;s Responsible, Accountable, Consulted, and Informed for each major OIDC activity.</p>
+<p>📝 <strong>Answer this:</strong></p>
+<ul>
+<li class="">Build your RACI matrix. Suggested rows (activities) to start from — adjust to your org:</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Activity</th><th>Responsible</th><th>Accountable</th><th>Consulted</th><th>Informed</th></tr></thead><tbody><tr><td>Selecting/approving OIDC providers</td><td></td><td></td><td></td><td></td></tr><tr><td>Registering new applications</td><td></td><td></td><td></td><td></td></tr><tr><td>Issuing client ID/secret</td><td></td><td></td><td></td><td></td></tr><tr><td>Rotating client secrets</td><td></td><td></td><td></td><td></td></tr><tr><td>Approving MFA/criticality exceptions</td><td></td><td></td><td></td><td></td></tr><tr><td>Monitoring auth logs</td><td></td><td></td><td></td><td></td></tr><tr><td>Responding to an incident</td><td></td><td></td><td></td><td></td></tr><tr><td>Reviewing/decommissioning stale apps</td><td></td><td></td><td></td><td></td></tr><tr><td>Approving policy exceptions</td><td></td><td></td><td></td><td></td></tr><tr><td>Reviewing this policy annually</td><td></td><td></td><td></td><td></td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="22-compliance--review-requirements">22. Compliance &amp; Review Requirements<a href="#22-compliance--review-requirements" class="hash-link" aria-label="Direct link to 22. Compliance &amp; Review Requirements" title="Direct link to 22. Compliance &amp; Review Requirements" translate="no">​</a></h2>
+<p>Your OIDC policy doesn&#x27;t exist in isolation — it needs to satisfy whatever regulatory or contractual frameworks your organization is already bound by.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Which regulatory or compliance frameworks apply (GDPR, HIPAA, PCI-DSS, SOC 2, ISO 27001, others)?</li>
+<li class="">Are there specific clauses in those frameworks that directly constrain OIDC design choices (e.g., data residency, MFA mandates, log retention minimums)?</li>
+<li class="">Who is responsible for evidencing compliance during an audit?</li>
+<li class="">How often is a formal compliance review conducted against this policy?</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="23-policy-review--version-control">23. Policy Review / Version Control<a href="#23-policy-review--version-control" class="hash-link" aria-label="Direct link to 23. Policy Review / Version Control" title="Direct link to 23. Policy Review / Version Control" translate="no">​</a></h2>
+<p>A policy that&#x27;s never revisited quietly goes stale — new providers emerge, old threats change, and the org itself changes shape. This closing section commits to keeping it current.</p>
+<p>📝 <strong>Answer these:</strong></p>
+<ul>
+<li class="">Who owns this document and is responsible for keeping it current?</li>
+<li class="">On what cadence is it formally reviewed (annually, on major security incidents, on major provider changes)?</li>
+<li class="">Where does the version history live, and what does a version bump require (approval from whom)?</li>
+</ul>
+<p><em>(Suggested table to include in your Word doc:)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Summary of Changes</th></tr></thead><tbody><tr><td>0.1</td><td></td><td></td><td>Initial draft</td></tr></tbody></table>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-you-should-have-now">What you should have now<a href="#what-you-should-have-now" class="hash-link" aria-label="Direct link to What you should have now" title="Direct link to What you should have now" translate="no">​</a></h2>
+<p>If you worked through all 23 sections, your Word document is a first draft of a complete OIDC policy — every section named, every open question either answered or flagged for follow-up with the right stakeholder. The next step is the least exciting but most important one: get it in front of security, legal, and your app owners for review, then set the date for the first version-control entry in section 23.</p></div><footer class="docusaurus-mt-lg"><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col"><b>Tags:</b><ul class="tags_jXut padding--none margin-left--sm"><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/blog/pr-17/tags/security">security</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/blog/pr-17/tags/identity">identity</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/blog/pr-17/tags/oidc">oidc</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/blog/pr-17/tags/sso">sso</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/blog/pr-17/tags/governance">governance</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/blog/pr-17/tags/policy">policy</a></li></ul></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Blog post page navigation"><a class="pagination-nav__link pagination-nav__link--prev" href="/blog/pr-17/htb-mumbai-meetup-19-summary"><div class="pagination-nav__sublabel">Newer post</div><div class="pagination-nav__label">Summary of HTB Mumbai Meetup held on 12th September 2026</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/blog/pr-17/openai-hugging-face-exploitgym-incident"><div class="pagination-nav__sublabel">Older post</div><div class="pagination-nav__label">The Hack Nobody Ordered: When OpenAI&#x27;s Own Model Broke Into Hugging Face</div></a></nav></main><div class="col col--2"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#how-to-use-this-guide" class="table-of-contents__link toc-highlight">How to use this guide</a></li><li><a href="#1-purpose" class="table-of-contents__link toc-highlight">1. Purpose</a></li><li><a href="#2-scope" class="table-of-contents__link toc-highlight">2. Scope</a></li><li><a href="#3-definitions" class="table-of-contents__link toc-highlight">3. Definitions</a></li><li><a href="#4-approved-oidc-providers--applicability" class="table-of-contents__link toc-highlight">4. Approved OIDC Providers &amp; Applicability</a></li><li><a href="#5-application-classification" class="table-of-contents__link toc-highlight">5. Application Classification</a></li><li><a href="#6-provider-selection-matrix" class="table-of-contents__link toc-highlight">6. Provider Selection Matrix</a></li><li><a href="#7-application-registration" class="table-of-contents__link toc-highlight">7. Application Registration</a></li><li><a href="#8-client-id--secret-management" class="table-of-contents__link toc-highlight">8. Client ID &amp; Secret Management</a></li><li><a href="#9-redirect-uri--origin-requirements" class="table-of-contents__link toc-highlight">9. Redirect URI &amp; Origin Requirements</a></li><li><a href="#10-authentication--mfa-requirements" class="table-of-contents__link toc-highlight">10. Authentication &amp; MFA Requirements</a></li><li><a href="#11-oidc-flow--protocol-requirements" class="table-of-contents__link toc-highlight">11. OIDC Flow &amp; Protocol Requirements</a></li><li><a href="#12-claims-scopes--data-handling" class="table-of-contents__link toc-highlight">12. Claims, Scopes &amp; Data Handling</a></li><li><a href="#13-token-management" class="table-of-contents__link toc-highlight">13. Token Management</a></li><li><a href="#14-session--logout-management" class="table-of-contents__link toc-highlight">14. Session &amp; Logout Management</a></li><li><a href="#15-logging--monitoring" class="table-of-contents__link toc-highlight">15. Logging &amp; Monitoring</a></li><li><a href="#16-vulnerability--security-testing" class="table-of-contents__link toc-highlight">16. Vulnerability &amp; Security Testing</a></li><li><a href="#17-lifecycle-management" class="table-of-contents__link toc-highlight">17. Lifecycle Management</a></li><li><a href="#18-third-party-provider-requirements" class="table-of-contents__link toc-highlight">18. Third-Party Provider Requirements</a></li><li><a href="#19-availability--business-continuity" class="table-of-contents__link toc-highlight">19. Availability &amp; Business Continuity</a></li><li><a href="#20-incident-management" class="table-of-contents__link toc-highlight">20. Incident Management</a></li><li><a href="#21-raci" class="table-of-contents__link toc-highlight">21. RACI</a></li><li><a href="#22-compliance--review-requirements" class="table-of-contents__link toc-highlight">22. Compliance &amp; Review Requirements</a></li><li><a href="#23-policy-review--version-control" class="table-of-contents__link toc-highlight">23. Policy Review / Version Control</a></li><li><a href="#what-you-should-have-now" class="table-of-contents__link toc-highlight">What you should have now</a></li></ul></div></div></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Blog</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/blog/pr-17/">All Posts</a></li><li class="footer__item"><a class="footer__link-item" href="/blog/pr-17/tags">Tags</a></li><li class="footer__item"><a class="footer__link-item" href="/blog/pr-17/archive">Archive</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Community</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://Haxnation.org" target="_blank" rel="noopener noreferrer" class="footer__link-item">Haxnation.org<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/haxnation/blog" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Contribute</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/haxnation/blog/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" class="footer__link-item">Writing Guidelines<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://github.com/haxnation/blog/fork" target="_blank" rel="noopener noreferrer" class="footer__link-item">Fork &amp; Submit PR<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2026 Haxnation. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
