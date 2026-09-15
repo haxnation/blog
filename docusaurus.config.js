@@ -4,6 +4,8 @@
 // Production: Haxnation/blog
 
 import { themes as prismThemes } from 'prism-react-renderer';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -37,14 +39,26 @@ const config = {
     },
   ],
 
-  // Docusaurus 3.10+ — moved from top-level onBrokenMarkdownLinks
+  
+  // Docusaurus 3.10+ — MDX + Markdown support and Mermaid diagrams
   markdown: {
-    format: 'md',
+    format: 'detect',
     mermaid: true,
     hooks: {
       onBrokenMarkdownLinks: 'warn',
     },
   },
+
+  // ── Stylesheets (KaTeX Math CSS) ─────────────────────────────────
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+      type: 'text/css',
+      integrity:
+        'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+      crossorigin: 'anonymous',
+    },
+  ],
 
   // ── Internationalisation ─────────────────────────────────────────
   i18n: {
@@ -62,6 +76,8 @@ const config = {
         docs: {
           path: 'docs',
           routeBasePath: 'docs',
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
         },
 
         // ── Blog configuration ────────────────────────────────────
@@ -71,6 +87,8 @@ const config = {
           showReadingTime: true,
           readingTime: ({ content, frontMatter, defaultReadingTime }) =>
             defaultReadingTime({ content, options: { wordsPerMinute: 200 } }),
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
 
           // Feed generation
           feedOptions: {
@@ -113,7 +131,12 @@ const config = {
     ],
   ],
 
-  // ── Themes (local search + mermaid diagrams) ─────────────────────
+  // ── Plugins ───────────────────────────────────────────────────────
+  plugins: [
+    'docusaurus-plugin-image-zoom',
+  ],
+
+  // ── Themes ────────────────────────────────────────────────────────
   themes: [
     '@docusaurus/theme-mermaid',
     [
@@ -123,21 +146,40 @@ const config = {
         hashed: true,
         indexBlog: true,
         indexDocs: false,
-        docsRouteBasePath: [],
+        indexPages: false,
         blogRouteBasePath: '/',
-        language: 'en',
-        searchResultLimits: 8,
-        searchResultContextMaxLength: 50,
+        language: ['en'],
+        highlightSearchTermsOnTargetPage: true,
         explicitSearchResultPath: true,
       }),
     ],
   ],
 
-
   // ── Theme configuration ───────────────────────────────────────────
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      // ── Mermaid config ────────────────────────────────────────
+      mermaid: {
+        theme: { light: 'neutral', dark: 'dark' },
+        options: {
+          fontFamily: 'JetBrains Mono, monospace',
+        },
+      },
+
+      // ── Image Zoom config ─────────────────────────────────────
+      zoom: {
+        selector: '.markdown :not(em) > img',
+        background: {
+          light: 'rgba(250, 250, 250, 0.95)',
+          dark: 'rgba(11, 11, 11, 0.95)',
+        },
+        config: {
+          margin: 24,
+          scrollOffset: 40,
+        },
+      },
+
       // ── Color mode (dark/light toggle) ────────────────────────
       colorMode: {
         defaultMode: 'light',

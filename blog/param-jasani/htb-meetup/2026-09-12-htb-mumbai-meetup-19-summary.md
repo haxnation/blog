@@ -166,8 +166,9 @@ To visualize this, consider an application sending a print job:
 2. The operating system formats the request and passes it to the printer driver.
 3. The printer driver translates the abstract print command into hardware-specific commands understood by the printer's internal controller.
 
-> [!NOTE]
-> Because drivers reside in **Ring 0**, any vulnerability inside a driver runs with the full authority of the Windows kernel, completely bypassing user-mode restrictions.
+:::tip
+Because drivers reside in **Ring 0**, any vulnerability inside a driver runs with the full authority of the Windows kernel, completely bypassing user-mode restrictions.
+::: 
 
 ---
 
@@ -222,7 +223,7 @@ PPL enforces a hierarchical trust model governed by the process signer level:
   <!-- Level 7 / 6 -->
   <rect x="40" y="28" width="700" height="40" rx="8" fill="url(#pplGradHigh)" />
   <text x="60" y="53" font-family="sans-serif" font-size="13" font-weight="bold" fill="#ffffff">Level 7 / 6: WinSystem / WinTcb</text>
-  <text x="720" y="53" text-anchor="end" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">Highest Authority — CSRSS, SMSS, Services</text>
+  <text x="720" y="53" text-anchor="end" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">Highest Authority ,  CSRSS, SMSS, Services</text>
 
   <!-- Level 5 -->
   <rect x="40" y="76" width="700" height="40" rx="8" fill="url(#pplGradHigh)" />
@@ -247,7 +248,7 @@ PPL enforces a hierarchical trust model governed by the process signer level:
   <!-- Level 0 - None (Unprotected) -->
   <rect x="40" y="272" width="700" height="38" rx="8" fill="url(#pplGradLow)" />
   <text x="60" y="296" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff">Level 0: None (Unprotected)</text>
-  <text x="720" y="296" text-anchor="end" font-family="sans-serif" font-size="12" font-weight="bold" fill="#fff5f5">Lowest Rank — Standard Apps & Malware (Blocked from Levels 1-7)</text>
+  <text x="720" y="296" text-anchor="end" font-family="sans-serif" font-size="12" font-weight="bold" fill="#fff5f5">Lowest Rank ,  Standard Apps & Malware (Blocked from Levels 1-7)</text>
 </svg>
 <figcaption class="diagram-caption"><strong>Fig 1.3:</strong> Windows Protected Process Light (PPL) Signer Hierarchy. Lower tiers cannot acquire write/terminate handles to higher tiers.</figcaption>
 </figure>
@@ -358,7 +359,7 @@ DSE state is controlled by global variables inside `CI.dll`, primarily `g_CiEnab
 
 ### Part 3: The Trust Breakdown & The BYOVD Concept
 
-While DSE ensures that only digitally signed drivers can be loaded, **a cryptographic signature validates authorship and integrity—it does not validate code safety.**
+While DSE ensures that only digitally signed drivers can be loaded, **a cryptographic signature validates authorship and integrity, it does not validate code safety.**
 
 <div class="diagram-container">
 <figure>
@@ -397,7 +398,7 @@ Known vulnerable drivers are indexed publicly on repositories like **[LOLDrivers
 
 ---
 
-### Part 4: The Communication Mechanism — The IOCTL Interface
+### Part 4: The Communication Mechanism ,  The IOCTL Interface
 
 To interact with a kernel driver, user-mode software uses the standard Windows Input/Output Control (**IOCTL**) interface.
 
@@ -661,7 +662,7 @@ Defending against BYOVD requires a defense-in-depth strategy:
 
 ## Session 2: "Coffee Shop to Corporate Network: Understanding the Hidden Risks of Connected IoT Devices" by Omkar Mali
 
-The second session presented an end-to-end red team case study demonstrating how a seemingly benign, untrusted smart device—a smart refrigerator in a corporate café—can be exploited to compromise an enterprise active directory environment, corporate email systems, VPN gateways, and internal video surveillance infrastructure.
+The second session presented an end-to-end red team case study demonstrating how a seemingly benign, untrusted smart device, a smart refrigerator in a corporate café, can be exploited to compromise an enterprise active directory environment, corporate email systems, VPN gateways, and internal video surveillance infrastructure.
 
 <div class="diagram-container">
 <figure>
@@ -748,18 +749,22 @@ The second session presented an end-to-end red team case study demonstrating how
 
 The speaker introduced the concept that modern IoT devices are full-fledged networked computers embedded with sensors, proprietary firmware, and continuous cloud connectivity. 
 
-To contextualize the severity of IoT and connected embedded architectures, the speaker highlighted the **Connected Vehicle Attack Surface**—referencing real-world research against modern autonomous and connected vehicles (such as the KIA vehicle vulnerability). In that scenario, security researchers demonstrated that knowing only a vehicle's public **Vehicle Identification Number (VIN)** allowed attackers to query backend telematics web APIs, remotely track live GPS coordinates, unlock vehicle doors, honk horns, and start engines over the internet without requiring physical proximity or access to the key fob.
+To contextualize the severity of IoT and connected embedded architectures, the speaker highlighted the **Connected Vehicle Attack Surface**, referencing real-world research against modern autonomous and connected vehicles (such as the KIA vehicle vulnerability). In that scenario, security researchers demonstrated that knowing only a vehicle's public **Vehicle Identification Number (VIN)** allowed attackers to query backend telematics web APIs, remotely track live GPS coordinates, unlock vehicle doors, honk horns, and start engines over the internet without requiring physical proximity or access to the key fob.
 
-The same architectural flaws observed in automotive ecosystems—weak API authentication, hardcoded developer credentials, and lack of firmware validation—exist in everyday smart appliances.
+The same architectural flaws observed in automotive ecosystems, weak API authentication, hardcoded developer credentials, and lack of firmware validation, exist in everyday smart appliances.
 
 ---
 
 ### Part 2: The Coffee Shop Attack Scenario & Physical UI Escape
 
-> [!NOTE]
-> **Engagement Scenario & Constraints:**
-> - **Environment:** An operator is seated in a ground-floor coffee shop/café shared with upper-floor corporate employees as an auxiliary break room.
-> - **Hardware Footprint:** Minimalist setup consisting solely of a standard laptop—no Software-Defined Radios (SDRs), high-gain directional antennas, or physical network taps.
+:::note
+
+**Engagement Scenario & Constraints:**
+> **Environment:** An operator is seated in a ground-floor coffee shop/café shared with upper-floor corporate employees as an auxiliary break room.
+
+
+> **Hardware Footprint:** Minimalist setup consisting solely of a standard laptop, no Software-Defined Radios (SDRs), high-gain directional antennas, or physical network taps.
+:::
 
 #### 1. Physical Footprint & UI Kiosk Escape
 To identify attack vectors without raising suspicion from café staff or patrons:
@@ -900,12 +905,13 @@ With 6 validated usernames and candidate passwords:
   - Enforced a 10-minute sleep interval between attempts with randomized jitter to stay beneath account lockout thresholds.
 - **Success:** Authenticated successfully into an active employee mailbox.
 
-> [!IMPORTANT]
-> **Target Authentication Status & Security Gaps:**
-> - **Target Environment:** Microsoft 365 Outlook Web Access (`https://mail.<target_domain>.com/owa/`)
-> - **Authentication Status:** Successful takeover of employee domain account.
-> - **Critical Vulnerability 1:** **No Multi-Factor Authentication (MFA)** was enforced for this account.
-> - **Critical Vulnerability 2:** Account status was marked **"Out of Office" (OOO / Vacation)**, minimizing risk of concurrent session alerts.
+:::note
+**Target Authentication Status & Security Gaps:**
+> **Target Environment:** Microsoft 365 Outlook Web Access (`https://mail.<target_domain>.com/owa/`)</br>
+> **Authentication Status:** Successful takeover of employee domain account.</br>
+> **Critical Vulnerability 1:** **No Multi-Factor Authentication (MFA)** was enforced for this account.</br>
+> **Critical Vulnerability 2:** Account status was marked **"Out of Office" (OOO / Vacation)**, minimizing risk of concurrent session alerts.
+:::
 
 #### Stealthy Email Reconnaissance
 To avoid triggering endpoint DLP or SOC file-download alerts:
@@ -1021,20 +1027,22 @@ The session highlighted that structured threat modeling must always precede tech
 ## References and Further Reading
 
 ### Windows Kernel & BYOVD Security (Session 1)
-- **[LOLDrivers.io](https://www.loldrivers.io)** — Living Off The Land Drivers curated database of vulnerable, signed Windows drivers used in real-world attacks.
-- **[Vergilius Project](https://www.vergiliusproject.com/)** — Comprehensive index of undocumented Windows kernel structures (`_EPROCESS`, `_ETHREAD`, `_PS_PROTECTION`) across OS versions.
-- **[Microsoft Recommended Driver Block Rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules)** — Official WDAC and HVCI driver blocklist guidelines.
-- **[TrueSight Killer (GitHub)](https://github.com/jnahmias/truesight-killer)** — Proof-of-concept tool demonstrating EDR termination via vulnerable driver IOCTL abuse.
-- **[AV-EDR-Killer (GitHub)](https://github.com/Ph4nt0m-c/AV-EDR-Killer)** — Open-source BYOVD implementation leveraging `wsftprm.sys` (CVE-2023-52271).
-- **[PPLKiller by Mattiwatti (GitHub)](https://github.com/Mattiwatti/PPLKiller)** — Tool demonstrating PPL stripping and DKOM manipulation via vulnerable signed drivers.
-- **[DSE Patcher (GitHub)](https://github.com/fengjixuchui/DsePatcher)** — Demonstrates disabling Driver Signature Enforcement via kernel write primitives.
-- **[Protected Processes & PPL Architecture (Alex Ionescu)](https://www.alex-ionescu.com/?p=97)** — Fundamental research on Windows Protected Process Light internals.
-- **[Windows Kernel Programming by Pavel Yosifovich](https://leanpub.com/windowskernelprogramming)** — Reference book for Windows kernel architecture, driver development, and IOCTL dispatching.
+- **[LOLDrivers.io](https://www.loldrivers.io)** ,  Living Off The Land Drivers curated database of vulnerable, signed Windows drivers used in real-world attacks.
+- **[Vergilius Project](https://www.vergiliusproject.com/)** ,  Comprehensive index of undocumented Windows kernel structures (`_EPROCESS`, `_ETHREAD`, `_PS_PROTECTION`) across OS versions.
+- **[Microsoft Recommended Driver Block Rules](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules)** ,  Official WDAC and HVCI driver blocklist guidelines.
+- **[TrueSight Killer (GitHub)](https://github.com/jnahmias/truesight-killer)** ,  Proof-of-concept tool demonstrating EDR termination via vulnerable driver IOCTL abuse.
+- **[AV-EDR-Killer (GitHub)](https://github.com/Ph4nt0m-c/AV-EDR-Killer)** ,  Open-source BYOVD implementation leveraging `wsftprm.sys` (CVE-2023-52271).
+- **[PPLKiller by Mattiwatti (GitHub)](https://github.com/Mattiwatti/PPLKiller)** ,  Tool demonstrating PPL stripping and DKOM manipulation via vulnerable signed drivers.
+- **[DSE Patcher (GitHub)](https://github.com/fengjixuchui/DsePatcher)** ,  Demonstrates disabling Driver Signature Enforcement via kernel write primitives.
+- **[Protected Processes & PPL Architecture (Alex Ionescu)](https://www.alex-ionescu.com/?p=97)** ,  Fundamental research on Windows Protected Process Light internals.
+- **[Windows Kernel Programming by Pavel Yosifovich](https://leanpub.com/windowskernelprogramming)** ,  Reference book for Windows kernel architecture, driver development, and IOCTL dispatching.
+- **[HEVD Windows Kernel Exploitation: Stack Overflow (Sushant Mane)](https://medium.com/@sushant.m.mane/hevd-windows-kernel-exploitation-stack-overflow-12be551350f1)** ,  Practical analysis of stack-overflow exploitation in the HackSys Extreme Vulnerable Driver.
+- **[Kernel Shield: Reversing the NSEckrnl Malops.io Rootkit Driver (Sushant Mane)](https://medium.com/@sushant.m.mane/kernel-shield-reversing-the-nseckrnl-malops-io-rootkit-driver-fb4af6bcb19c)** ,  Reverse-engineering research on the NSEckrnl rootkit driver and kernel-level defensive techniques.
 
 ### IoT Security, Threat Modeling & OSINT (Session 2)
-- **[OWASP Internet of Things (IoT) Top 10](https://owasp.org/www-project-internet-of-things/)** — Standard security awareness documentation covering weak passwords, insecure interfaces, and lack of firmware validation.
-- **[Phonebook.cz](https://phonebook.cz)** — Open-source intelligence tool for domain and email enumeration.
-- **[DeHashed](https://www.dehashed.com/)** & **[Leak-Lookup](https://leak-lookup.com/)** — Public breach search engines for credential exposure auditing.
-- **[Microsoft STRIDE Threat Model](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)** — Structural framework for categorizing threats (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege).
-- **[Automotive Security Research: Remote Vehicle Takeover](https://samcurry.net/web-hackers-vs-the-auto-industry/)** — Detailed analysis of connected vehicle API vulnerabilities allowing remote tracking and control via VIN numbers.
-- **[TraverseSpray & msmailprobe (GitHub)](https://github.com)** — Tools for enumerating Microsoft 365 Exchange endpoints and performing password spraying.
+- **[OWASP Internet of Things (IoT) Top 10](https://owasp.org/www-project-internet-of-things/)** ,  Standard security awareness documentation covering weak passwords, insecure interfaces, and lack of firmware validation.
+- **[Phonebook.cz](https://phonebook.cz)** ,  Open-source intelligence tool for domain and email enumeration.
+- **[DeHashed](https://www.dehashed.com/)** & **[Leak-Lookup](https://leak-lookup.com/)** ,  Public breach search engines for credential exposure auditing.
+- **[Microsoft STRIDE Threat Model](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)** ,  Structural framework for categorizing threats (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege).
+- **[Automotive Security Research: Remote Vehicle Takeover](https://samcurry.net/web-hackers-vs-the-auto-industry/)** ,  Detailed analysis of connected vehicle API vulnerabilities allowing remote tracking and control via VIN numbers.
+- **[TraverseSpray & msmailprobe (GitHub)](https://github.com)** ,  Tools for enumerating Microsoft 365 Exchange endpoints and performing password spraying.

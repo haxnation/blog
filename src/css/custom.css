@@ -5,6 +5,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Inter:wght@400;500;600&display=swap');
 
+
 /* ═══════════════════════════════════════════════════════════════
    SEARCH BAR — @easyops-cn/docusaurus-search-local
    ═══════════════════════════════════════════════════════════════ */
@@ -166,6 +167,25 @@ input[class*='searchInput']::placeholder,
   color: var(--hax-ink-muted) !important;
 }
 
+/* Highlighted search terms */
+mark[class*='searchResultMatch'],
+mark[class*='highlight'],
+.DocSearch-Hit mark,
+mark {
+  background: rgba(92, 225, 230, 0.35) !important;
+  color: var(--hax-ink) !important;
+  font-weight: 700 !important;
+  padding: 1px 3px !important;
+}
+
+[data-theme='dark'] mark[class*='searchResultMatch'],
+[data-theme='dark'] mark[class*='highlight'],
+[data-theme='dark'] .DocSearch-Hit mark,
+[data-theme='dark'] mark {
+  background: rgba(92, 225, 230, 0.45) !important;
+  color: #ffffff !important;
+}
+
 /* No results */
 [class*='noResultsFound'],
 .DocSearch-NoResults {
@@ -177,6 +197,15 @@ input[class*='searchInput']::placeholder,
   padding: 2rem !important;
   color: var(--hax-ink-muted) !important;
 }
+
+/* Hide the search bar's infinite loading ring animation */
+[class*='loadingRing'],
+[class*='searchBarLoadingRing'] {
+  display: none !important;
+  animation: none !important;
+}
+
+
 
 /* ═══════════════════════════════════════════════════════════════
    AUTHOR INDEX PAGE (/authors)
@@ -776,89 +805,16 @@ div[class*='announcementBarClose'] {
   backdrop-filter: none !important;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   HERO
-   ═══════════════════════════════════════════════════════════════ */
-.blog-list-page .hero {
-  background-color: var(--hax-canvas);
-  border-bottom: var(--hax-border);
-  padding: 3.5rem 2rem 2.5rem;
-  position: relative;
-  overflow: hidden;
-}
 
-.blog-list-page .hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right,  rgba(11,11,11,0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(11,11,11,0.07) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-[data-theme='dark'] .blog-list-page .hero::before {
-  background-image:
-    linear-gradient(to right,  rgba(92,225,230,0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(92,225,230,0.07) 1px, transparent 1px);
-}
-
-.blog-list-page .hero::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(to right, transparent, #5ce1e6, transparent);
-  opacity: 0.6;
-  animation: hax-scan 6s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.blog-list-page .hero > * { position: relative; z-index: 2; }
-
-.hero__title {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: clamp(2.5rem, 7vw, 5.5rem) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.04em !important;
-  text-transform: uppercase !important;
-  line-height: 0.95 !important;
-  color: var(--hax-ink) !important;
-  animation: hax-flash-in 0.55s cubic-bezier(0.16,1,0.3,1) both;
-}
-
-[data-theme='dark'] .hero__title { color: #fafafa !important; }
-
-.hero__title::after {
-  content: '';
-  display: inline-block;
-  width: 0.5em;
-  height: 0.82em;
-  background: #5ce1e6;
-  margin-left: 0.1em;
-  vertical-align: middle;
-  animation: hax-blink 1s step-end infinite;
-}
-
-.hero__subtitle {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 0.68rem !important;
-  font-weight: 500 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.18em !important;
-  color: var(--hax-ink-muted) !important;
-  margin-top: 0.75rem !important;
-  animation: hax-fade-up 0.5s 0.3s ease both;
-}
 
 /* ═══════════════════════════════════════════════════════════════
-   BLOG CARDS — only on blog list page (not archive)
+   BLOG CARDS — Blog list, Tag pages, and Author post pages
    ═══════════════════════════════════════════════════════════════ */
-.blog-list-page article {
+
+/* blog-list-page is applied to BlogListPage AND our swizzled BlogTagsPostsPage */
+.blog-list-page article,
+.blog-tags-post-list-page article,
+.blog-authors-posts-page article {
   background: var(--hax-surface);
   border: var(--hax-border);
   box-shadow: var(--hax-shadow);
@@ -868,33 +824,51 @@ div[class*='announcementBarClose'] {
   transition: transform 75ms linear, box-shadow 75ms linear;
 }
 
-.blog-list-page article:nth-child(1) { animation-delay: 0.04s; }
-.blog-list-page article:nth-child(2) { animation-delay: 0.1s; }
-.blog-list-page article:nth-child(3) { animation-delay: 0.16s; }
-.blog-list-page article:nth-child(4) { animation-delay: 0.22s; }
-.blog-list-page article:nth-child(5) { animation-delay: 0.28s; }
-.blog-list-page article:nth-child(6) { animation-delay: 0.34s; }
-.blog-list-page article:nth-child(7) { animation-delay: 0.40s; }
-.blog-list-page article:nth-child(8) { animation-delay: 0.46s; }
-.blog-list-page article:nth-child(9) { animation-delay: 0.52s; }
-.blog-list-page article:nth-child(10){ animation-delay: 0.58s; }
+.blog-list-page article:nth-child(1),
+.blog-tags-post-list-page article:nth-child(1) { animation-delay: 0.04s; }
+.blog-list-page article:nth-child(2),
+.blog-tags-post-list-page article:nth-child(2) { animation-delay: 0.1s; }
+.blog-list-page article:nth-child(3),
+.blog-tags-post-list-page article:nth-child(3) { animation-delay: 0.16s; }
+.blog-list-page article:nth-child(4),
+.blog-tags-post-list-page article:nth-child(4) { animation-delay: 0.22s; }
+.blog-list-page article:nth-child(5),
+.blog-tags-post-list-page article:nth-child(5) { animation-delay: 0.28s; }
+.blog-list-page article:nth-child(6),
+.blog-tags-post-list-page article:nth-child(6) { animation-delay: 0.34s; }
+.blog-list-page article:nth-child(7),
+.blog-tags-post-list-page article:nth-child(7) { animation-delay: 0.40s; }
+.blog-list-page article:nth-child(8),
+.blog-tags-post-list-page article:nth-child(8) { animation-delay: 0.46s; }
+.blog-list-page article:nth-child(9),
+.blog-tags-post-list-page article:nth-child(9) { animation-delay: 0.52s; }
+.blog-list-page article:nth-child(10),
+.blog-tags-post-list-page article:nth-child(10){ animation-delay: 0.58s; }
 
-.blog-list-page article:hover {
+.blog-list-page article:hover,
+.blog-tags-post-list-page article:hover,
+.blog-authors-posts-page article:hover {
   transform: translate(2px, 2px);
   box-shadow: var(--hax-shadow-sm);
 }
 
-.blog-list-page article header {
+.blog-list-page article header,
+.blog-tags-post-list-page article header,
+.blog-authors-posts-page article header {
   border-bottom: var(--hax-border-thin);
   padding-bottom: 0.75rem;
   margin-bottom: 1rem;
 }
 
 /* Post title */
-.blog-list-page article h2 a {
+.blog-list-page article h2 a,
+.blog-tags-post-list-page article h2 a,
+.blog-authors-posts-page article h2 a {
+  display: block !important;
   font-family: 'JetBrains Mono', monospace !important;
   font-weight: 800 !important;
   font-size: 1.2rem !important;
+  line-height: 1.1 !important;
   text-transform: uppercase !important;
   letter-spacing: -0.02em !important;
   text-decoration: none !important;
@@ -902,8 +876,139 @@ div[class*='announcementBarClose'] {
   transition: color 75ms linear;
 }
 
-[data-theme='dark'] .blog-list-page article h2 a { color: #fafafa !important; }
-.blog-list-page article h2 a:hover { color: #5ce1e6 !important; }
+[data-theme='dark'] .blog-list-page article h2 a,
+[data-theme='dark'] .blog-tags-post-list-page article h2 a,
+[data-theme='dark'] .blog-authors-posts-page article h2 a {
+  color: #fafafa !important;
+}
+
+.blog-list-page article h2 a:hover,
+.blog-tags-post-list-page article h2 a:hover,
+.blog-authors-posts-page article h2 a:hover {
+  color: #5ce1e6 !important;
+}
+
+.blog-list-page article h2,
+.blog-tags-post-list-page article h2,
+.blog-authors-posts-page article h2 {
+  line-height: 1.1 !important;
+  padding: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.75rem !important;
+}
+
+/* Tag page header — custom class from our swizzled component */
+.hax-tag-page-header {
+  background: var(--hax-surface);
+  border: var(--hax-border);
+  box-shadow: var(--hax-shadow);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 2rem;
+  animation: hax-fade-up 0.4s ease both;
+}
+
+.hax-tag-page-title {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: clamp(1.4rem, 4vw, 2.2rem) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.1 !important;
+  margin: 0 0 0.5rem !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  color: var(--hax-ink) !important;
+}
+
+[data-theme='dark'] .hax-tag-page-title { color: #5ce1e6 !important; }
+
+.hax-tag-page-desc {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.8rem !important;
+  color: var(--hax-ink-muted) !important;
+  margin: 0.4rem 0 !important;
+}
+
+.hax-tag-back-link {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  color: var(--hax-ink-muted) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-top: 0.25rem !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+.hax-tag-back-link:hover { color: #5ce1e6 !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTHORS LIST PAGE
+   ═══════════════════════════════════════════════════════════════ */
+.hax-authors-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 1.5rem 0 !important;
+}
+
+.hax-author-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: var(--hax-border);
+  box-shadow: var(--hax-shadow);
+  background: var(--hax-surface);
+  margin-bottom: 1rem;
+  animation: hax-fade-up 0.4s ease both;
+  transition: transform 75ms linear, box-shadow 75ms linear;
+}
+
+.hax-author-list-item:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--hax-shadow-sm);
+}
+
+.hax-author-list-item__main { flex: 1; min-width: 0; }
+
+.hax-author-posts-link {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--hax-ink) !important;
+  border: 1px solid var(--hax-bc) !important;
+  padding: 4px 8px !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  transition: background 75ms linear, color 75ms linear !important;
+  flex-shrink: 0;
+}
+
+.hax-author-posts-link:hover {
+  background: var(--hax-ink) !important;
+  color: #5ce1e6 !important;
+  text-decoration: none !important;
+}
+
+[data-theme='dark'] .hax-author-posts-link {
+  color: #fafafa !important;
+  border-color: rgba(250,250,250,0.35) !important;
+}
+
+[data-theme='dark'] .hax-author-posts-link:hover {
+  background: #5ce1e6 !important;
+  color: #0b0b0b !important;
+  border-color: #5ce1e6 !important;
+}
+
+
 
 /* ═══════════════════════════════════════════════════════════════
    TAGS
@@ -1117,11 +1222,19 @@ time,
   border: 1px solid rgba(250, 250, 250, 0.15) !important;
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   CODE BLOCKS — Original style + word wrap
+   ═══════════════════════════════════════════════════════════════ */
 .prism-code {
   border: var(--hax-border) !important;
   box-shadow: var(--hax-shadow) !important;
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.82rem !important;
+  /* Word wrap — always on by default */
+  white-space: pre-wrap !important;
+  word-break: break-all !important;
+  overflow-wrap: break-word !important;
 }
 
 [class*='codeBlockTitle'] {
@@ -1135,13 +1248,26 @@ time,
   padding: 5px 14px !important;
 }
 
+
 .markdown table {
   border-collapse: collapse !important;
   border: var(--hax-border) !important;
-  width: 100% !important;
+  /* display: block makes the table itself scrollable (fixes escape) */
+  display: block !important;
+  overflow-x: auto !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  margin: 1.5rem 0 !important;
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.8rem !important;
 }
+
+/* Remove old scroll wrapper — no longer needed */
+.markdown > table,
+.markdown-table-wrapper {
+  max-width: 100%;
+}
+
 
 /* NOTE: th background is a FIXED #0b0b0b (not var(--hax-ink)) on purpose.
    In dark mode --hax-ink flips to #fafafa, which made cyan-on-white headers
@@ -1159,6 +1285,7 @@ time,
   padding: 0.6rem 1rem !important;
   border: 2px solid #0b0b0b !important;
   text-align: left !important;
+  white-space: nowrap !important;
 }
 
 [data-theme='dark'] .markdown table thead,
@@ -1174,9 +1301,69 @@ time,
   padding: 0.5rem 1rem !important;
   background: var(--hax-surface) !important;
   color: var(--hax-ink) !important;
+  transition: background 75ms linear, color 75ms linear !important;
 }
-.markdown tr:hover td { background: #0b0b0b !important; color: #5ce1e6 !important; }
-[data-theme='dark'] .markdown tr:hover td { background: #5ce1e6 !important; color: #0b0b0b !important; }
+
+.markdown tr:hover td { 
+  background: #0b0b0b !important; 
+  color: #5ce1e6 !important; 
+}
+
+[data-theme='dark'] .markdown tr:hover td { 
+  background: #5ce1e6 !important; 
+  color: #0b0b0b !important; 
+}
+
+/* ── Inline code inside tables on row hover (high contrast cyan / dark) ── */
+.markdown tr:hover td code {
+  background: rgba(92, 225, 230, 0.2) !important;
+  color: #5ce1e6 !important;
+  border-color: #5ce1e6 !important;
+}
+
+[data-theme='dark'] .markdown tr:hover td code {
+  background: rgba(11, 11, 11, 0.3) !important;
+  color: #0b0b0b !important;
+  border-color: #0b0b0b !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   IMAGE CAPTIONS — High visibility in both Light and Dark themes
+   ═══════════════════════════════════════════════════════════════ */
+figcaption,
+.diagram-caption,
+figure figcaption,
+.markdown figcaption,
+.markdown .diagram-caption {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: var(--hax-ink-muted) !important;
+  margin-top: 0.6rem !important;
+  margin-bottom: 1rem !important;
+  text-align: center !important;
+  line-height: 1.5 !important;
+}
+
+[data-theme='dark'] figcaption,
+[data-theme='dark'] .diagram-caption,
+[data-theme='dark'] figure figcaption,
+[data-theme='dark'] .markdown figcaption,
+[data-theme='dark'] .markdown .diagram-caption {
+  color: #bbbbbb !important;
+}
+
+figcaption strong,
+.diagram-caption strong,
+.markdown figcaption strong {
+  color: var(--hax-ink) !important;
+}
+
+[data-theme='dark'] figcaption strong,
+[data-theme='dark'] .diagram-caption strong,
+[data-theme='dark'] .markdown figcaption strong {
+  color: #5ce1e6 !important;
+}
 
 /* ═══════════════════════════════════════════════════════════════
    ARCHIVE PAGE
@@ -1625,6 +1812,68 @@ header.hero--primary {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   ANIMATE ON SCROLL (AOS) & CYBER VISUAL FX
+   ═══════════════════════════════════════════════════════════════ */
+[data-aos] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition-property: opacity, transform;
+  transition-duration: 0.45s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-aos].aos-animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-aos='fade-up'] {
+  transform: translateY(24px);
+}
+
+[data-aos='fade-up'].aos-animate {
+  transform: translateY(0);
+}
+
+[data-aos='zoom-in'] {
+  transform: scale(0.95);
+}
+
+[data-aos='zoom-in'].aos-animate {
+  transform: scale(1);
+}
+
+/* MDX Interactive Demo Card */
+.hax-mdx-card {
+  background: var(--hax-surface);
+  border: var(--hax-border);
+  box-shadow: var(--hax-shadow);
+  padding: 1.5rem;
+  margin: 1.75rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hax-mdx-card__header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--hax-ink);
+  border-bottom: var(--hax-border-thin);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+[data-theme='dark'] .hax-mdx-card__header {
+  color: #5ce1e6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 996px) {
@@ -1701,3 +1950,5 @@ header.hero--primary {
     max-width: 50vw !important; /* Ensure logo doesn't overflow */
   }
 }
+
+
