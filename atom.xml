@@ -148,6 +148,114 @@
         <category label="Zero-Day" term="Zero-Day"/>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Red Team vs Blue Team in the Cloud - What Changes When the Battlefield Is AWS]]></title>
+        <id>https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws</id>
+        <link href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws"/>
+        <updated>2026-09-22T04:00:00.000Z</updated>
+        <summary type="html"><![CDATA[A breakdown of how red team and blue team operations change when the battlefield moves from a traditional on-prem network to AWS ‚  where identity, not the network, is the new perimeter.
+]]></summary>
+        <content type="html"><![CDATA[<p>For years, red team vs blue team exercises were built around a familiar map: a corporate network, a perimeter firewall, some VLANs, and a handful of servers sitting in a data center you could physically walk into. Red teams broke in through phishing or an exposed RDP port; blue teams watched network traffic and endpoint logs for anomalies.</p>
+<p>Move that same exercise into AWS, and the map changes completely. There's no perimeter to breach in the traditional sense ‚there's an API. There's no "inside the network" ,there's IAM. And the artifacts both sides fight over aren't servers, they're roles, policies, and temporary credentials that can vanish in an hour. This post looks at what actually changes for red and blue teams when the battlefield shifts to AWS, and what that means for how both sides need to operate.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-perimeter-is-gone---identity-is-the-new-boundary">The Perimeter Is Gone ‚  Identity Is the New Boundary<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#the-perimeter-is-gone---identity-is-the-new-boundary" class="hash-link" aria-label="Direct link to The Perimeter Is Gone ‚  Identity Is the New Boundary" title="Direct link to The Perimeter Is Gone ‚  Identity Is the New Boundary" translate="no">​</a></h2>
+<p>In a traditional network, segmentation does a lot of the defensive work. In AWS, everything is reachable via an API call if you have the right credentials.</p>
+<blockquote>
+<p><em>A single IAM role with excessive permissions can matter more than any firewall rule.</em> <mark>In the cloud, identity is the perimeter.</mark></p>
+</blockquote>
+<p>This is why red teamers increasingly talk about "IAM privilege escalation paths" the way they used to talk about "lateral movement across the LAN," and why blue teams now spend as much time on policy review as they do on network monitoring.</p>
+<p>The shared responsibility model reinforces this. AWS secures the underlying infrastructure; the customer secures what they configure on top of it. This is why <mark>almost every real-world AWS breach traces back to misconfiguration, not a flaw in AWS itself</mark>. A public S3 bucket, an overly permissive role, or a forgotten access key sitting in a GitHub repo does more damage than any zero-day.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="red-team-attacking-aws">Red Team: Attacking AWS<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#red-team-attacking-aws" class="hash-link" aria-label="Direct link to Red Team: Attacking AWS" title="Direct link to Red Team: Attacking AWS" translate="no">​</a></h2>
+<p>A red team engagement against an AWS environment typically follows a different playbook than an on-prem one.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="reconnaissance-shifts-to-the-control-plane">Reconnaissance Shifts to the Control Plane<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#reconnaissance-shifts-to-the-control-plane" class="hash-link" aria-label="Direct link to Reconnaissance Shifts to the Control Plane" title="Direct link to Reconnaissance Shifts to the Control Plane" translate="no">​</a></h3>
+<p>Instead of port-scanning subnets, attackers enumerate S3 buckets, look for exposed API Gateway endpoints, and search public code repositories for leaked access keys. Cloud recon is often quieter and faster than network recon because so much of it can be done anonymously against public-facing resources.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-instance-metadata-service-imds-becomes-a-favorite-target">The Instance Metadata Service (IMDS) Becomes a Favorite Target<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#the-instance-metadata-service-imds-becomes-a-favorite-target" class="hash-link" aria-label="Direct link to The Instance Metadata Service (IMDS) Becomes a Favorite Target" title="Direct link to The Instance Metadata Service (IMDS) Becomes a Favorite Target" translate="no">​</a></h3>
+<p>Any EC2 instance with an attached IAM role exposes temporary credentials to anything that can reach <code>169.254.169.254</code>. A server-side request forgery (SSRF) vulnerability in a web app running on that instance is often enough to pull those credentials and inherit whatever permissions the role carries ‚  turning a modest web bug into full account compromise.</p>
+<blockquote>
+<p><em>This single technique has been behind several major breaches</em> ‚  <mark>which is exactly why AWS pushed IMDSv2 (token-based, much harder to abuse via SSRF) as the default.</mark></p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="privilege-escalation-looks-like-policy-analysis-not-exploit-development">Privilege Escalation Looks Like Policy Analysis, Not Exploit Development<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#privilege-escalation-looks-like-policy-analysis-not-exploit-development" class="hash-link" aria-label="Direct link to Privilege Escalation Looks Like Policy Analysis, Not Exploit Development" title="Direct link to Privilege Escalation Looks Like Policy Analysis, Not Exploit Development" translate="no">​</a></h3>
+<p>Rather than chaining kernel exploits, red teamers map IAM policies looking for permissions like:</p>
+<ul>
+<li class=""><code>iam:PassRole</code></li>
+<li class=""><code>iam:CreatePolicyVersion</code></li>
+<li class=""><code>sts:AssumeRole</code></li>
+</ul>
+<p>Any of these can let a low-privilege identity pivot into a high-privilege one. There are dozens of known escalation patterns here, and tools like <strong>Pacu</strong> and <strong>PMapper</strong> exist specifically to walk these graphs automatically.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="persistence-looks-different-too">Persistence Looks Different Too<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#persistence-looks-different-too" class="hash-link" aria-label="Direct link to Persistence Looks Different Too" title="Direct link to Persistence Looks Different Too" translate="no">​</a></h3>
+<p>Instead of planting a backdoor on a server that might get rebuilt tomorrow, attackers create a new IAM user with an access key, add themselves to a trust policy on an existing role, or drop a small Lambda function that quietly maintains access. Because infrastructure is often ephemeral and rebuilt from templates, <mark>persistence has to live in the identity layer or the account configuration, not on a disk.</mark></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="lateral-movement-means-moving-between-accounts-not-just-hosts">Lateral Movement Means Moving Between Accounts, Not Just Hosts<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#lateral-movement-means-moving-between-accounts-not-just-hosts" class="hash-link" aria-label="Direct link to Lateral Movement Means Moving Between Accounts, Not Just Hosts" title="Direct link to Lateral Movement Means Moving Between Accounts, Not Just Hosts" translate="no">​</a></h3>
+<p>In an AWS Organization with dozens of linked accounts, a compromised role in a low-security dev account can sometimes assume a role into production if trust policies aren't tightly scoped. This cross-account blast radius has no real equivalent in flat on-prem networks.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="blue-team-defending-aws">Blue Team: Defending AWS<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#blue-team-defending-aws" class="hash-link" aria-label="Direct link to Blue Team: Defending AWS" title="Direct link to Blue Team: Defending AWS" translate="no">​</a></h2>
+<p>Defenders get a different toolkit too ‚  arguably a better one, if it's configured and actually watched.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="logging-is-native-and-mostly-free-of-gaps">Logging Is Native and (Mostly) Free of Gaps<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#logging-is-native-and-mostly-free-of-gaps" class="hash-link" aria-label="Direct link to Logging Is Native and (Mostly) Free of Gaps" title="Direct link to Logging Is Native and (Mostly) Free of Gaps" translate="no">​</a></h3>
+<p>CloudTrail records essentially every API call made in an account: who called it, from where, using what credentials. This is a defender's dream compared to trying to reconstruct activity from scattered host logs ‚  <strong>but only if</strong> CloudTrail is enabled everywhere, sent to a centralized and immutable log store, and actually monitored.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="purpose-built-detection-services-do-a-lot-of-the-heavy-lifting">Purpose-Built Detection Services Do a Lot of the Heavy Lifting<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#purpose-built-detection-services-do-a-lot-of-the-heavy-lifting" class="hash-link" aria-label="Direct link to Purpose-Built Detection Services Do a Lot of the Heavy Lifting" title="Direct link to Purpose-Built Detection Services Do a Lot of the Heavy Lifting" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>GuardDuty</strong> analyzes CloudTrail, VPC Flow Logs, and DNS logs for known malicious patterns ‚  like credential use from an unusual location, or an instance calling out to a crypto-mining pool.</li>
+<li class=""><strong>Security Hub</strong> aggregates findings across services into one view.</li>
+<li class=""><strong>IAM Access Analyzer</strong> flags resources and roles that are unintentionally exposed to the outside world.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="prevention-shifts-left-into-policy-as-code">Prevention Shifts Left Into Policy-as-Code<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#prevention-shifts-left-into-policy-as-code" class="hash-link" aria-label="Direct link to Prevention Shifts Left Into Policy-as-Code" title="Direct link to Prevention Shifts Left Into Policy-as-Code" translate="no">​</a></h3>
+<p><strong>Service Control Policies (SCPs)</strong> at the AWS Organization level can hard-block entire categories of dangerous actions account-wide ‚  disabling root user activity, restricting regions, or preventing the disabling of CloudTrail ‚  regardless of what an individual IAM role allows. Combined with tools like <strong>AWS Config</strong> rules that continuously check resources against a baseline, a lot of blue team work becomes about writing guardrails once rather than manually reviewing every change.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="least-privilege-is-the-actual-battleground">Least Privilege Is the Actual Battleground<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#least-privilege-is-the-actual-battleground" class="hash-link" aria-label="Direct link to Least Privilege Is the Actual Battleground" title="Direct link to Least Privilege Is the Actual Battleground" translate="no">​</a></h3>
+<p>Because a stolen credential inherits whatever permissions its role has, the single highest-leverage blue team activity in AWS is tightening IAM policies down to only what's needed, rotating and short-lifetime-ing credentials, and requiring MFA for anything sensitive.</p>
+<blockquote>
+<p><mark>This is less glamorous than watching a SIEM dashboard, but it's usually the difference between a contained incident and a full account takeover.</mark></p>
+</blockquote>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="a-composite-attack-path">A Composite Attack Path<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#a-composite-attack-path" class="hash-link" aria-label="Direct link to A Composite Attack Path" title="Direct link to A Composite Attack Path" translate="no">​</a></h2>
+<p>To make this concrete, a realistic cloud intrusion often looks like this:</p>
+<ol>
+<li class="">Red team finds an SSRF bug in a web application running on an EC2 instance.</li>
+<li class="">They use it to query IMDS and steal the instance's temporary IAM credentials.</li>
+<li class="">Those credentials have <code>iam:PassRole</code> and <code>lambda:CreateFunction</code> ‚  enough to create a new Lambda function with a more privileged role attached, executing arbitrary code as that role.</li>
+<li class="">From there, they enumerate S3 buckets across the account and exfiltrate sensitive data.</li>
+</ol>
+<p>For blue team, the detections that should have fired at each stage:</p>
+<ul>
+<li class="">Unusual outbound requests to IMDS from application logs.</li>
+<li class="">GuardDuty alerting on anomalous API behavior from an EC2 instance role.</li>
+<li class="">CloudTrail showing a rare <code>lambda:CreateFunction</code> call paired with <code>iam:PassRole</code>.</li>
+<li class="">Ideally, an SCP that never let that role touch IAM in the first place.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-this-means-in-practice">What This Means in Practice<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#what-this-means-in-practice" class="hash-link" aria-label="Direct link to What This Means in Practice" title="Direct link to What This Means in Practice" translate="no">​</a></h2>
+<blockquote>
+<p><em>On-prem red/blue exercises are fundamentally about network visibility and host forensics.</em> <mark>Cloud red/blue exercises are fundamentally about identity, permissions, and API activity.</mark></p>
+</blockquote>
+<p>The tools change (CloudTrail instead of packet captures, IAM policy graphs instead of Active Directory trust maps), the pace changes (infrastructure can be stood up, attacked, and torn down in minutes), and the stakes of a single misconfiguration go up, because one over-permissioned role can be the entire ballgame.</p>
+<p>For teams running these exercises, that means red teams need people who think like cloud architects as much as exploit developers, and blue teams need to treat IAM policy review, log centralization, and SCP guardrails as core defensive infrastructure ‚  not an afterthought bolted onto a lift-and-shift migration.</p>
+<p><mark>The fight hasn't gone away. It's just moved from the network layer to the control plane.</mark></p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="references--further-reading">References &amp; Further Reading<a href="https://haxnation.github.io/blog/2026-09-22-red-team-vs-blue-team-in-the-cloud-aws#references--further-reading" class="hash-link" aria-label="Direct link to References &amp; Further Reading" title="Direct link to References &amp; Further Reading" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>AWS Shared Responsibility Model</strong> ‚  <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank" rel="noopener noreferrer" class="">aws.amazon.com/compliance/shared-responsibility-model</a></li>
+<li class=""><strong>IMDSv2</strong> ‚  AWS's token-based metadata service hardening. <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html" target="_blank" rel="noopener noreferrer" class="">docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html</a></li>
+<li class=""><strong>Pacu</strong> ‚  Open-source AWS exploitation framework. <a href="https://github.com/RhinoSecurityLabs/pacu" target="_blank" rel="noopener noreferrer" class="">github.com/RhinoSecurityLabs/pacu</a></li>
+<li class=""><strong>PMapper</strong> ‚  IAM privilege escalation graphing tool. <a href="https://github.com/nccgroup/PMapper" target="_blank" rel="noopener noreferrer" class="">github.com/nccgroup/PMapper</a></li>
+<li class=""><strong>Amazon GuardDuty</strong> ‚  <a href="https://aws.amazon.com/guardduty/" target="_blank" rel="noopener noreferrer" class="">aws.amazon.com/guardduty</a></li>
+<li class=""><strong>AWS Security Hub</strong> ‚  <a href="https://aws.amazon.com/security-hub/" target="_blank" rel="noopener noreferrer" class="">aws.amazon.com/security-hub</a></li>
+<li class=""><strong>IAM Access Analyzer</strong> ‚  <a href="https://aws.amazon.com/iam/access-analyzer/" target="_blank" rel="noopener noreferrer" class="">aws.amazon.com/iam/access-analyzer</a></li>
+<li class=""><strong>Service Control Policies (SCPs)</strong> ‚  <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html" target="_blank" rel="noopener noreferrer" class="">docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html</a></li>
+</ul>]]></content>
+        <author>
+            <name>Trupti Vibhute</name>
+            <uri>https://github.com/st4rburg3r</uri>
+        </author>
+        <category label="red-team" term="red-team"/>
+        <category label="blue-team" term="blue-team"/>
+        <category label="AWS" term="AWS"/>
+        <category label="cloud-security" term="cloud-security"/>
+        <category label="IAM" term="IAM"/>
+        <category label="CloudTrail" term="CloudTrail"/>
+        <category label="GuardDuty" term="GuardDuty"/>
+        <category label="IMDS" term="IMDS"/>
+        <category label="incident-response" term="incident-response"/>
+        <category label="cloud-penetration-testing" term="cloud-penetration-testing"/>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[How Google's Gemini Reached Three Real Companies During a Security Exercise]]></title>
         <id>https://haxnation.github.io/blog/gemini-irregular-hacked-real-companies</id>
         <link href="https://haxnation.github.io/blog/gemini-irregular-hacked-real-companies"/>
