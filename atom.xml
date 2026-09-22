@@ -2,12 +2,151 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://haxnation.github.io/blog</id>
     <title>Haxnation Blog Blog</title>
-    <updated>2026-09-21T09:00:00.000Z</updated>
+    <updated>2026-09-22T09:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://haxnation.github.io/blog"/>
     <subtitle>Haxnation Blog Blog</subtitle>
     <icon>https://haxnation.github.io/blog/img/favicon.svg</icon>
     <rights>Copyright © 2026 Haxnation. All rights reserved.</rights>
+    <entry>
+        <title type="html"><![CDATA[This Week: A Perfect 10, an AI Agent Blind Spot, and ClickFix Everywhere]]></title>
+        <id>https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly</id>
+        <link href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly"/>
+        <updated>2026-09-22T09:00:00.000Z</updated>
+        <summary type="html"><![CDATA[A maximum-severity Cisco bypass under active exploitation, a supply-chain bug that broke four major AI coding agents at once, three separate ClickFix campaigns, and an npm worm that waited 111 days to come back. This week had a theme.]]></summary>
+        <content type="html"><![CDATA[<p>A browser. A plugin. An npm package. A login screen. All normal stuff, and all the source of a real incident this week. Nothing here is exotic. It's mostly things people already trusted, doing something they weren't supposed to.</p>
+<p>Five stories stood out. Put them side by side and a pattern shows up fast.</p>
+<p><img decoding="async" loading="lazy" alt="Week at a glance: five stories from September 15 to 21, 2026" src="https://haxnation.github.io/blog/assets/images/week-at-a-glance-00ad42b0a9de248922b3b9866e3b659a.svg" width="900" height="340" class="img_ev3q">
+<em>Fig. 1: The week's five headline numbers, from Cisco's perfect-10 CVE to the Glasswing ledger's fix rate.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Story</th><th>Number</th><th>What it means</th></tr></thead><tbody><tr><td>Cisco ISE auth bypass</td><td>CVSS 10.0</td><td>Unauthenticated, actively exploited</td></tr><tr><td>AI coding agents hit by Plugin4Shell</td><td>4</td><td>2 patched, 2 not</td></tr><tr><td>Sites hit in the Brevo ClickFix attack</td><td>100,000+</td><td>One five-and-a-half-hour window</td></tr><tr><td>Shai-Hulud's dormancy before resurfacing</td><td>111 days</td><td>Sat untouched in 4 new npm packages</td></tr><tr><td>Glasswing avg. fixed findings per project</td><td>1.79</td><td>5 months into the initiative</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="ciscos-perfect-10">Cisco's Perfect 10<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#ciscos-perfect-10" class="hash-link" aria-label="Direct link to Cisco's Perfect 10" title="Direct link to Cisco's Perfect 10" translate="no">​</a></h2>
+<p>Start with the one that needs the least explaining. Cisco disclosed CVE-2026-76460, a maximum-severity flaw (CVSS 10.0) in Identity Services Engine, and it's already under active exploitation. The root cause is almost boring: an API endpoint with insufficient authentication control. Send it a crafted request, and an unauthenticated remote attacker walks past the web-based management interface entirely.</p>
+<p>ISE sits at the center of a lot of enterprise network access control. A bug here isn't "patch when convenient." If you're running it, this is a today problem, not a this-sprint problem.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-bug-that-broke-four-ai-coding-agents-at-once">The Bug That Broke Four AI Coding Agents at Once<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#the-bug-that-broke-four-ai-coding-agents-at-once" class="hash-link" aria-label="Direct link to The Bug That Broke Four AI Coding Agents at Once" title="Direct link to The Bug That Broke Four AI Coding Agents at Once" translate="no">​</a></h2>
+<p>I covered this one in more depth last week, but it's worth restating because the story kept moving. AIR Security's researchers, Or Nevo, Dor Granat, and Niv Hoffman, found that Claude Code, OpenAI Codex, GitHub Copilot, and Google's Gemini CLI all share a design flaw they're calling Plugin4Shell.</p>
+<p>The setup: plugin marketplaces pin installed code to a specific, reviewed Git commit hash. That's supposed to guarantee the code can't change without someone noticing. What AIR found is that all four agents perform the checkout step but never verify the result actually matches the pinned hash.</p>
+<!-- -->
+<p>No click required, because plugins can refresh in the background. You install something legitimate, reviewed, and correctly pinned, and the ground shifts under it later.</p>
+<p>Patch status, as of this week:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Agent</th><th>Status</th><th>Fixed in</th></tr></thead><tbody><tr><td>Claude Code</td><td>Patched</td><td>2.1.179</td></tr><tr><td>OpenAI Codex</td><td>Patched</td><td>0.146.0</td></tr><tr><td>GitHub Copilot</td><td>Disputed</td><td>No confirmed complete fix</td></tr><tr><td>Gemini CLI</td><td>Won't be patched</td><td>Deprecated, migrate to Antigravity</td></tr></tbody></table>
+<p>Four teams, four different codebases, and every one of them made the same assumption: that checking out a commit is the same as verifying you got it. That's not a coincidence. It's a sign the security model around agentic coding tools is still catching up to how much access those tools actually have.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="clickfix-isnt-one-attack-anymore-its-a-technique">ClickFix Isn't One Attack Anymore, It's a Technique<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#clickfix-isnt-one-attack-anymore-its-a-technique" class="hash-link" aria-label="Direct link to ClickFix Isn't One Attack Anymore, It's a Technique" title="Direct link to ClickFix Isn't One Attack Anymore, It's a Technique" translate="no">​</a></h2>
+<p>ClickFix used to mean one specific trick: a fake CAPTCHA or fake error message that talks a victim into pasting a command into Run or Terminal. This week it showed up three separate ways, against three very different targets.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="campaign-1-a-researcher-targeted-directly">Campaign 1: A researcher, targeted directly<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#campaign-1-a-researcher-targeted-directly" class="hash-link" aria-label="Direct link to Campaign 1: A researcher, targeted directly" title="Direct link to Campaign 1: A researcher, targeted directly" translate="no">​</a></h3>
+<p>Huntress detailed an attack where someone posing as a crypto marketing exec sent a security researcher a real Google Doc with a malicious sidebar built as a Google Apps Script. The sidebar displayed a fake decryption failure and a "manual update" button. Clicking it delivered an AMOS infostealer on macOS or a PowerShell loader chain on Windows, and none of it required downloading a file, since the script ran client-side in the browser.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="campaign-2-a-supply-chain-at-scale">Campaign 2: A supply chain, at scale<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#campaign-2-a-supply-chain-at-scale" class="hash-link" aria-label="Direct link to Campaign 2: A supply chain, at scale" title="Direct link to Campaign 2: A supply chain, at scale" translate="no">​</a></h3>
+<p>Customer engagement platform Brevo had a Cloudflare API key compromised, which let an attacker deploy a malicious Cloudflare Worker for roughly five and a half hours.</p>
+<!-- -->
+<p>In that window, the worker injected a fake CAPTCHA overlay into Brevo's own site and into JavaScript files embedded on more than 100,000 customer websites, including into unsubscribe links in Brevo-sent campaign emails. Security firm Sansec separately reported that the same access was used to plant WordPress malware on customer sites.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="campaign-3-aimed-at-the-attackers-themselves">Campaign 3: Aimed at the attackers themselves<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#campaign-3-aimed-at-the-attackers-themselves" class="hash-link" aria-label="Direct link to Campaign 3: Aimed at the attackers themselves" title="Direct link to Campaign 3: Aimed at the attackers themselves" translate="no">​</a></h3>
+<p>Cisco Talos documented a cryptocurrency-theft campaign that convinces its targets, people looking to exploit fake vulnerability reports about crypto swap services, to paste JavaScript directly into the Chrome address bar or a Tampermonkey extension. The script hooks the browser's fetch API and quietly swaps out deposit addresses. Command-and-control runs through a publicly published Google Sheets document and the Google Visualization API, a genuinely clever way to hide C2 traffic in plain sight.</p>
+<p>Three campaigns, three different victim profiles, one shared insight: getting someone to run a command themselves is still easier than finding a real exploit, whether the target is a security researcher, a marketing platform's customer base, or a would-be cybercriminal.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="shai-hulud-came-back-after-111-days">Shai-Hulud Came Back After 111 Days<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#shai-hulud-came-back-after-111-days" class="hash-link" aria-label="Direct link to Shai-Hulud Came Back After 111 Days" title="Direct link to Shai-Hulud Came Back After 111 Days" translate="no">​</a></h2>
+<p>Aikido Security found the Shai-Hulud worm in four new npm packages this week, the same malware family first seen in May's attack against AntV. That's not what makes it worth noting. What makes it worth noting is the gap: a payload with a known, published hash sat untouched for over three months, then got republished on a registry that explicitly scans every package before it goes live, and the scan didn't catch it.</p>
+<p>That's the actual lesson. Not "a worm came back," but that hash-based detection has a real hole in it somewhere, and nobody's fully explained where yet.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-glasswing-numbers-five-months-in">The Glasswing Numbers, Five Months In<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#the-glasswing-numbers-five-months-in" class="hash-link" aria-label="Direct link to The Glasswing Numbers, Five Months In" title="Direct link to The Glasswing Numbers, Five Months In" translate="no">​</a></h2>
+<p>Anthropic's Project Glasswing, its initiative to have Claude find and report real vulnerabilities across open-source projects, has been running for about five months. VulnCheck pulled the public ledger and the numbers are rougher than the project's own messaging suggests: 202 of 26,153 claimed findings fixed, 245 withdrawn, and only 2 marked as duplicates. That averages out to under two fixed findings per project across the 113 projects touched.</p>
+<p>There's also a real gap in severity judgment. Claude rated 91.5% of its findings as critical or high severity. The maintainers who actually reviewed them rated only 51.3% that way. Automated vulnerability discovery at scale is genuinely useful, but this is a good reminder that the discovery step and the triage step are not the same problem, and solving one doesn't solve the other.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="whats-actually-worth-doing-this-week">What's Actually Worth Doing This Week<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#whats-actually-worth-doing-this-week" class="hash-link" aria-label="Direct link to What's Actually Worth Doing This Week" title="Direct link to What's Actually Worth Doing This Week" translate="no">​</a></h2>
+<ul>
+<li class="">If you run <strong>Cisco ISE</strong>, check your version against CVE-2026-76460 now. This one's being actively exploited.</li>
+<li class="">If you or your team use <strong>Claude Code or Codex</strong>, confirm you're on 2.1.179 or 0.146.0 or later.</li>
+<li class="">If you're still on <strong>GitHub Copilot or Gemini CLI</strong> with plugins installed, audit what you've got and where it's hosted. Non-GitHub Git hosts are the higher-risk path for Plugin4Shell specifically.</li>
+<li class="">If your org embeds <strong>third-party widgets</strong> (chat, forms, analytics) on customer-facing pages, ask what happens if that vendor's API key leaks. Brevo's incident is a good prompt for that conversation regardless of which vendor you use.</li>
+<li class="">Treat <strong>hash-verified npm packages</strong> as a starting point, not a guarantee. Shai-Hulud's return shows registry scanning has blind spots even against known payloads.</li>
+</ul>
+<p>Nothing this week required a novel technique. It required someone finding the one verification step that got skipped, and there's apparently no shortage of those left.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="sources">Sources<a href="https://haxnation.github.io/blog/this-week-trusted-things-behaving-badly#sources" class="hash-link" aria-label="Direct link to Sources" title="Direct link to Sources" translate="no">​</a></h2>
+<ul>
+<li class=""><a href="https://thehackernews.com/2026/09/weekly-recap-cisco-0-day-ai-agent-rce.html" target="_blank" rel="noopener noreferrer" class="">The Hacker News: Weekly Recap, September 21, 2026</a></li>
+<li class=""><a href="https://thehackernews.com/2026/09/cisco-warns-of-new-zero-day-ise-auth.html" target="_blank" rel="noopener noreferrer" class="">The Hacker News: Cisco Warns of New Zero-Day ISE Auth Bypass</a></li>
+<li class=""><a href="https://thehackernews.com/2026/09/plugin4shell-lets-repository-owners.html" target="_blank" rel="noopener noreferrer" class="">The Hacker News: Plugin4Shell Lets Repository Owners...</a></li>
+<li class=""><a href="https://www.helpnetsecurity.com/?p=385068" target="_blank" rel="noopener noreferrer" class="">Help Net Security: Zero-click RCE vulnerability hit four major AI coding agents</a></li>
+<li class=""><a href="https://www.huntress.com/blog/google-doc-sidebar-malware-mac-windows" target="_blank" rel="noopener noreferrer" class="">Huntress: Google Doc sidebar malware</a></li>
+<li class=""><a href="https://status.brevo.com/incidents/01M2QBC4EZ24ZACW6SWQYVW8N3/write-up" target="_blank" rel="noopener noreferrer" class="">Brevo: Cloudflare Worker incident write-up</a></li>
+<li class=""><a href="https://sansec.io/research/brevo-supply-chain-attack" target="_blank" rel="noopener noreferrer" class="">Sansec: Brevo supply chain attack research</a></li>
+<li class=""><a href="https://blog.talosintelligence.com/clickfix-moves-into-the-browser/" target="_blank" rel="noopener noreferrer" class="">Cisco Talos: ClickFix moves into the browser</a></li>
+<li class=""><a href="https://www.aikido.dev/blog/shai-hulud-npm-resurfaces" target="_blank" rel="noopener noreferrer" class="">Aikido: Shai-Hulud npm resurfaces</a></li>
+<li class=""><a href="https://www.vulncheck.com/blog/anthropic-glasswing-receipts" target="_blank" rel="noopener noreferrer" class="">VulnCheck: Anthropic Glasswing receipts</a></li>
+</ul>]]></content>
+        <author>
+            <name>Arham Sayyed</name>
+            <uri>https://github.com/arham-sayyed</uri>
+        </author>
+        <category label="Cybersecurity" term="Cybersecurity"/>
+        <category label="Weekly-Recap" term="Weekly-Recap"/>
+        <category label="AI-Security" term="AI-Security"/>
+        <category label="Supply-Chain" term="Supply-Chain"/>
+        <category label="ClickFix" term="ClickFix"/>
+        <category label="Cisco" term="Cisco"/>
+        <category label="npm" term="npm"/>
+        <category label="Zero-Day" term="Zero-Day"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[How Google's Gemini Reached Three Real Companies During a Security Exercise]]></title>
         <id>https://haxnation.github.io/blog/gemini-irregular-hacked-real-companies</id>
