@@ -80,7 +80,18 @@ jobs:
               });
               const match = data.find(p => p.head.sha === headSha);
               if (!match) {
-                core.setFailed(`Could not resolve PR for head SHA ${headSha}. Skipping.`);
+                // NOT a failure. The usual cause is a PR that was closed or merged
+                // after its STAGE 1 build finished: it is no longer in the open
+                // set, so its head SHA cannot be resolved. setFailed() here marked
+                // every close/merge of a PR with a red X on main, which is exactly
+                // what this workflow's header says it exists to prevent. Nothing
+                // is published on this path (every later step is gated on skip),
+                // so skipping is the fail-safe direction. Warn rather than fail so
+                // a genuinely broken lookup still shows up in the run summary
+                // instead of the preview pipeline going quietly green.
+                core.warning(`No open PR matches head SHA ${headSha} — the PR was most likely closed or merged while its build was running. Skipping preview deploy.`);
+                core.setOutput('skip', 'true');
+                core.setOutput('skip_reason', `unresolved-head-sha=${headSha}`);
                 return;
               }
               prNumber = match.number;
