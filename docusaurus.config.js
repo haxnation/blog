@@ -275,11 +275,6 @@ const config = {
         ],
       },
 
-      // ── Mermaid diagrams ─────────────────────────────────────
-      mermaid: {
-        theme: { light: 'neutral', dark: 'forest' },
-      },
-
       // ── Open Graph / SEO metadata ─────────────────────────────
       metadata: [
         { name: 'keywords', content: 'Haxnation, blog, cybersecurity, hacking, development' },

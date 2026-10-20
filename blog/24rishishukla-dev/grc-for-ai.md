@@ -1,103 +1,135 @@
 ---
 title: "GRC for AI: A Beginner's Guide to Governance, Risk, and Compliance"
 author: "Rishi Shukla"
-date: "2026-09-30"
+date: "2026-09-26"
 tags: [GRC, AI Governance, Cybersecurity, Compliance, ISO 42001, NIST AI RMF, DPDP Act]
-
-
-A couple of months back I was helping a friend fill out a loan form, and watching the bank's process made me realize something I'd never really thought about: a bank is legally not allowed to just hand your salary details to some random company. Compare that to the free AI chatbot I had open in my other tab, where I'd just pasted in a document without a second thought. Nobody stops you from doing that. That gap is basically what this whole post is about.
-
-<!-- truncate -->
+---
 
 # GRC for AI: A Beginner's Guide to Governance, Risk, and Compliance
 
-## So what's GRC, actually?
+Imagine you walk into your bank and apply for a loan. You hand over your salary slips, your PAN card, your address, your spending history. That data doesn't just sit in a drawer — the bank uses it, stores it, and shares parts of it with credit bureaus, insurers, and regulators. But there's one thing the bank is *not* allowed to do: hand your data over to some random third party so that party can profit from it. Banking regulation exists precisely to stop that.
 
-GRC = Governance, Risk, and Compliance. Three words that sound boring until you realize they're the reason companies don't just do whatever they want with your data.
+Now compare that to a free AI chatbot. Paste the same salary slip into it to "summarize my finances," and by default, on many consumer AI tools, that conversation can be stored and used to improve the company's models — unless you specifically go into settings and opt out. It's not illegal, it's usually disclosed somewhere in the terms of service, but it's a completely different data relationship than the one you have with your bank. Nobody signed you up for it explicitly, and most people never read the settings page closely enough to notice.
 
-- **Governance** is who makes the rules and who's on the hook if those rules get broken.
-- **Risk** is figuring out what could actually go wrong, and how bad it would be.
-- **Compliance** is just... are we doing the thing we said we'd do, or is the policy a PDF that nobody's opened since it was written.
+That gap — the difference between "data handled inside a regulated, accountable system" and "data handled inside a system with looser or unclear rules" — is exactly the problem **GRC** exists to close.
 
-Put together, it's basically the system that stops "move fast and break things" from becoming "move fast and leak everyone's data."
+This post breaks down what GRC is, why it suddenly matters so much in the age of AI, and how organizations actually use it — in plain language, with real examples.
 
-## Why AI makes this messier
+## What is GRC?
 
-Here's the thing people don't think about enough: we paste *everything* into AI tools. Code, resumes, financial screenshots, half-written emails to our boss. And almost nobody checks what happens to that stuff afterward.
+GRC stands for **Governance, Risk, and Compliance**.
 
-A good example that actually happened: back in 2023, engineers at Samsung's chip division pasted confidential source code into ChatGPT to debug it faster. Reasonable thing to want to do. Except now that code had left Samsung's systems and gone somewhere they had zero control over. Samsung ended up banning generative AI tools on company devices entirely after that. It's become one of those stories every security person brings up when they talk about AI risk, because it shows exactly how this goes wrong  not through some dramatic hack, just an engineer trying to save time.
+It's a structured approach organizations use to make sure technology (and now, specifically, AI) is used safely, responsibly, and within the law — instead of everything happening in an unmonitored, ad-hoc way.
 
-And the "my data probably doesn't leave the country" assumption a lot of people have? It depends entirely on which tool, which plan, and what the terms of service actually say. OpenAI, for instance, has said in its own data controls documentation that regular ChatGPT conversations can be used to help train future models unless you turn that off yourself. That's disclosed, not sneaky  but almost nobody goes and checks the setting.
+A simple way to think about the three pieces:
 
-This is exactly why banks and similar companies lean toward private or enterprise-grade AI setups with actual contracts around data use, instead of just letting employees use whatever free tool is open in their browser.
+- **Governance** — who decides the rules, and who is accountable for them. In the bank example, this is the bank's internal data-handling policy plus the regulations RBI imposes on it.
+- **Risk** — what could go wrong, and how likely and damaging is it. What happens if that salary data leaks? What happens if an AI model trained partly on customer data starts leaking patterns back out to other users?
+- **Compliance** — are we actually following the laws and standards we're supposed to. Is the bank actually enforcing its own policy, or is it just a PDF nobody reads?
 
-### Banking is the clearest example
+## The AI Risk Landscape: Why This Suddenly Matters
 
-Banks (and insurance, NBFCs, all of BFSI really) are extra paranoid about this stuff for good reason. If customer financial data leaks because someone fed it into the wrong tool, that's not an "oops"  that's regulators, lawsuits, and a PR disaster all at once.
+Here's a scenario almost everyone can relate to: we give AI tools like ChatGPT *everything* — our questions, our documents, sometimes even sensitive company data — but we rarely stop to ask what happens to that data after we hit send.
 
-So GRC in this context is literally the thing standing between "AI tool helps us work faster" and "AI tool accidentally becomes a massive liability."
+This isn't hypothetical. In 2023, engineers at **Samsung's semiconductor division** pasted confidential source code and internal meeting notes into ChatGPT to get help fixing bugs and summarizing meetings. Because that data left the company's systems and entered a third-party AI tool, Samsung had no way to guarantee it wouldn't be retained, reviewed, or used elsewhere. The company responded by banning generative AI tools on company devices entirely and started building internal AI tools instead. This single incident is now one of the most cited case studies in enterprise AI governance — it's the textbook example of what happens when there's no GRC policy governing how employees use AI.
 
-## The standards everyone keeps name-dropping
+Many people assume "it's fine, our data probably doesn't leave our country" or "surely they don't actually use my chats" — but those are assumptions, not guarantees, and they depend entirely on the specific tool, its data-residency settings, its subscription tier, and its contract terms. For instance, OpenAI has stated that consumer ChatGPT conversations may by default be used to help train and improve its models unless the user actively opts out in settings — while its business/API tiers are handled differently. That's a legitimate business practice, disclosed in the terms of service — but it's precisely the kind of detail a GRC framework forces an organization to actually check, rather than assume.
 
-If you've been around any security or compliance conversation lately, you've probably heard these thrown around. Here's what they actually mean, stripped of jargon:
+This is exactly why organizations that handle sensitive data increasingly look at private, self-hosted, or enterprise-tier AI deployments — with contractual guarantees around data use — rather than relying purely on free public AI tools.
 
-**ISO/IEC 27001** - the old-school standard for information security in general. Not AI-specific, but basically the foundation everything else sits on top of.
+### Example: BFSI (Banking, Financial Services, and Insurance)
 
-**ISO/IEC 42001** - came out in December 2023, and it's the first international standard built specifically for managing AI systems. Unlike the NIST one below, this one you can actually get certified against  companies like AWS, Microsoft, and Anthropic have gone through the certification.
+This is exactly why the **BFSI sector** is so cautious with AI. A bank can't let customer financial data flow freely into an external AI tool — a leak here isn't just embarrassing, it can trigger regulatory penalties, lawsuits, and a total collapse of customer trust. Going back to our opening example: the bank is bound, by law and by contract, to protect your salary data. A general-purpose AI company with no such binding relationship to you is under no obligation to treat your data with the same level of care — unless a GRC framework is deliberately built to require it.
 
-**NIST AI RMF** - a framework from the US (NIST), released January 2023. It's built around four functions: **Govern** (set up the policies and culture), **Map** (understand what you're actually building and who it affects), **Measure** (test it — check for bias, security holes, reliability issues), and **Manage** (fix what you found, keep watching). It's not certifiable like ISO 42001 — think of it more as a shared vocabulary everyone in the industry uses. NIST also added a Generative-AI-specific profile in mid-2024 that covers stuff like hallucinations and misuse risks that didn't really apply before LLMs existed.
+This is where GRC steps in: it creates rules for how AI can be used, and shapes those rules so that data stays safe and the organization stays accountable — closing exactly the gap illustrated above.
 
-**RBI / SEBI**  our own regulators here in India. The big recent one is RBI's **FREE-AI Framework**, released August 2025, built by a committee led by an IIT Bombay professor. It lays out 7 guiding principles and 26 recommendations for how Indian banks and fintechs should handle AI  bias, explainability, cybersecurity, the works.
+## Adapting Your GRC Framework for AI
 
-## A rough mental model I use
+AI systems make mistakes — they can hallucinate facts, encode bias, or leak information they shouldn't. Because of this, organizations are adapting their GRC programs with AI-specific standards and frameworks. Here are the major ones, explained simply:
 
-Standards are great, but day to day I think about it more simply, in four steps:
+- **ISO/IEC 27001** — the long-standing international standard for information security management systems (ISMS). It's about protecting *all* organizational information, not AI-specific, but it's the foundation most AI governance work builds on top of.
+- **ISO/IEC 42001** — the world's first international standard specifically for an **AI Management System (AIMS)**, published in December 2023. It gives organizations a certifiable, auditable way to govern how they develop, provide, or use AI — covering things like risk assessment, transparency, and accountability across the AI lifecycle. Companies including AWS, Microsoft, and Anthropic have been certified against it.
+- **NIST AI Risk Management Framework (AI RMF)** — a voluntary framework from the US National Institute of Standards and Technology, first published in January 2023. It's built around four core functions:
+  - **Govern** — build the culture, policies, and accountability structures that hold everything together
+  - **Map** — understand the context: what is this AI system for, who does it affect, what could go wrong
+  - **Measure** — actually test and quantify the risks (bias, security gaps, reliability issues)
+  - **Manage** — act on what you found: prioritize, fix, and keep monitoring
 
-1. **Govern** - decide the rules before you need them, not after something breaks
-2. **Identify** - go looking for problems on purpose. Classic one: your model quietly treats one group's loan applications worse than another's because of skewed training data
-3. **Control** - once you know the risk, actually put something in place to stop it (access limits, human review for big decisions, blocking certain uploads)
-4. **Monitor** - don't stop watching once it's live. Most real incidents  Samsung included  happen after deployment, in day-to-day usage, not during some big launch event
+  In July 2024, NIST extended this with a **Generative AI Profile**, adding risk categories specific to large language models — things like hallucination, data poisoning, and misuse for harmful content generation. Unlike ISO 42001, the NIST AI RMF is **not certifiable** — it's a shared vocabulary and methodology, not a badge you can earn.
+- **RBI / SEBI** — India's financial regulators. The most significant recent development here is the RBI's **FREE-AI Framework** (Framework for Responsible and Ethical Enablement of Artificial Intelligence), released on 13 August 2025 after a committee chaired by IIT Bombay's Prof. Pushpak Bhattacharyya. It sets out 7 guiding principles ("Sutras") and 26 recommendations across six pillars — Infrastructure, Policy, Capacity, Governance, Protection, and Assurance — for how Indian banks, NBFCs, and fintechs should govern their use of AI, covering bias, explainability, cybersecurity, and incident reporting.
 
-This isn't an official framework name, just a simple way to think through the lifecycle without needing to memorize NIST's exact terminology.
+## A Simple Mental Model: 4 Layers of AI Governance
 
-## The actual laws, if you're in India
+Beyond specific standards, it helps to have a simple internal model for how AI governance actually works day-to-day inside a team. One useful way to structure it:
 
-- **DPDP Act, 2023** — India's data protection law, passed August 2023
-- **RBI Master Directions / FREE-AI** — financial sector specific
-- **ISO/IEC standards** — 27001 and 42001 from above
+**1. Govern**
+Decide the policies and rules for how AI can and can't be used in the organization. This includes staying current — following credible security and AI governance blogs, vendor advisories, and regulator updates. This is also where an organization would have written the rule Samsung didn't have in early 2023: "do not paste source code or confidential documents into third-party AI tools."
 
-### What the DPDP Act actually requires
+**2. Identify**
+Actively look for vulnerabilities and risks in your AI systems. A classic example: your AI model might be biased against certain groups — for instance, evaluating loan applications less favorably for one demographic than another purely due to skewed training data. Catching this early is the whole point of this step.
 
-A few things worth knowing if you're anywhere near an AI team:
+**3. Control**
+Once a risk is identified, put safeguards in place to prevent it from actually happening — access controls, output filtering, human review for high-stakes decisions, blocking uploads of certain file types to consumer AI tools, and so on.
 
-- Consent has to be specific. Old consent from years ago doesn't automatically cover some new AI use case you just rolled out.
-- Kids' data gets extra protection  you need actual parental consent, and you can't target ads or track behavior for minors.
-- People have a right to know how their data's being used, and to get it corrected or deleted.
-- There's now a dedicated body  the Data Protection Board of India  that handles complaints and enforcement.
-- The penalties aren't small. Up to ₹250 crore for failing to secure data properly if that leads to a breach, with other categories going up to ₹200 crore or ₹50 crore depending on what went wrong. Even individuals can get fined (smaller amounts, up to ₹10,000) for things like lying on a form.
+**4. Monitor**
+Governance doesn't stop at deployment. This is the continuous work of watching the AI system in production to make sure it keeps behaving as expected — and watching *how employees are actually using AI tools* day to day, since that's where most real-world incidents (like Samsung's) actually happen.
 
-## Whoever holds the data, holds the responsibility
+*(Note: this four-layer model is a practical mental map for teams, not a formal named standard — it's a simplified way to think through the lifecycle, distinct from the official NIST AI RMF functions listed above.)*
 
-Under the Act, whoever decides *why* and *how* your data gets processed is called a "Data Fiduciary," and that's a legal responsibility, not optional. Your bank is one for your loan data. If a company builds its own internal AI tool that touches customer info, that company just became a Data Fiduciary for whatever that tool does with the data too.
+## Regulator Reality: The Laws You Actually Have to Follow (India Focus)
 
-If something leaks, they're supposed to tell the Data Protection Board and the people affected without sitting on it. And yeah  penalties apply, which is the whole reason this isn't just a documentation exercise.
+- **DPDP Act, 2023** (Digital Personal Data Protection Act) — India's dedicated personal data protection law, enacted 11 August 2023.
+- **RBI Master Directions / FREE-AI Framework** — sector-specific rules and guidance for regulated financial entities.
+- **ISO/IEC standards** — including 27001 and 42001, discussed above.
 
-## The risk nobody talks about enough: Shadow AI
+### What AI Teams Must Know About the DPDP Act, 2023
 
-This one deserves its own mention. "Shadow AI" is when people in an org use AI tools nobody approved or even knows about  browser extensions, personal ChatGPT accounts, random free-tier signups. Samsung's incident is basically the textbook case of this: nobody was being malicious, people were just trying to get their work done faster, and it slipped past whatever controls existed.
+- **Consent is central.** Processing personal data generally requires clear, informed consent from the "Data Principal" (the individual the data belongs to) — organizations can't assume old consent automatically covers new AI use cases. This is exactly the difference between our bank and AI-chatbot example: the bank has explicit consent for a defined purpose (processing your loan), while a general AI tool's consent is buried in a terms-of-service checkbox most people never read.
+- **Extra protection for children's data.** The Act requires verifiable parental/guardian consent before processing a child's personal data, and bars tracking, behavioral monitoring, or targeted advertising directed at children.
+- **Right to grievance redressal and correction.** Data Principals have rights including access, correction, erasure, and grievance redressal — companies need to be able to explain how someone's data is being used.
+- **A dedicated regulator exists.** The **Data Protection Board of India (DPBI)** handles breach investigations, complaints, and enforcement.
+- **Penalties are significant.** Depending on the violation, financial penalties can reach up to ₹250 crore (roughly USD 30 million) for failing to implement reasonable security safeguards leading to a breach, with other violation categories carrying penalties up to ₹200 crore or ₹50 crore. Individuals (Data Principals) can also be fined up to ₹10,000 for violating their own duties under the Act, such as furnishing false information.
 
-The fix isn't banning AI outright (that usually just pushes it further underground). It's actually going and finding out where AI is already being used across the org, and bringing it under some kind of governance instead of pretending it isn't happening.
+## Data Fiduciary: Who's Responsible?
 
-## If you're starting from zero, do these five things
+Under the DPDP Act, any entity that decides *why* and *how* personal data is processed is called a **Data Fiduciary**, and it is directly responsible for protecting that data — this is not optional. Your bank is a Data Fiduciary for your loan data. If a company builds an internal AI tool that processes customer data, that company becomes a Data Fiduciary for whatever that AI tool touches too — the obligation follows the data, not just the original collection point.
 
-1. Make an actual list of every AI tool being used in the org  shadow usage included
-2. Put one specific person in charge of AI risk, not "the team" in general
-3. Check whether proper DPDP consent actually exists for how AI tools are using data
-4. Try out ISO 42001 controls in one small team before rolling it out everywhere
-5. Tell the board what's going on  don't let leadership find out about an AI risk after it's already a problem
+### What Happens If There's a Breach?
 
-## Last thought
+- If a breach occurs, the Data Fiduciary is expected to notify the Data Protection Board and the affected individuals without undue delay so they can protect themselves.
+- **Penalties** scale with the severity and nature of the violation, as outlined above — this is exactly why GRC isn't just paperwork; it has real financial and legal consequences attached to it.
 
-GRC people used to get a reputation for just being the ones who slow everything down with paperwork. That's changing fast. With AI, they're increasingly the only thing standing between "we moved fast" and "we moved fast and now we're in the news for the wrong reason."
+## Shadow AI: The Risk Most Organizations Underestimate
 
-The line between a bank that protects your data properly and a tool that quietly trains on it isn't really about the technology at all. It comes down to whether anyone bothered to govern it.
+One risk worth calling out on its own: **"Shadow AI"** — employees using AI tools the organization never approved, reviewed, or even knows about. Samsung's 2023 incident is a textbook Shadow AI case: individual engineers, trying to be helpful and efficient, used a public tool without realizing they were moving confidential data outside the company's control. A mature GRC program doesn't just write a policy and hope people read it — it actively looks for where AI tools are already being used across the organization (browser extensions, personal accounts, free-tier signups) so it can bring that usage under governance rather than banning it outright and pushing it further underground.
+
+## 5 Things a GRC Team Should Do to Get Started
+
+If an organization wants to get serious about AI GRC, here's a simple starting checklist:
+
+1. **Build an AI inventory** — know exactly which AI tools and models are being used across the organization, including the kind of Shadow AI usage described above
+2. **Appoint an AI risk owner** — someone directly accountable for AI-related risk decisions
+3. **Run a DPDP consent audit** — verify that valid, specific consent actually exists for how data is being used with AI tools
+4. **Pilot ISO/IEC 42001 controls** — start testing this AI-specific management system standard in one business unit before rolling it out organization-wide
+5. **Brief the board** — make sure leadership understands the risks involved and is aligned on the governance plan
+
+## The CISO's AI GRC Charter
+
+At the end of the day, it comes down to a simple idea:
+
+**GRC professionals are the new guardians of trustworthy AI.**
+
+As AI becomes part of everyday business operations, the people managing Governance, Risk, and Compliance aren't "checking boxes" anymore — they're the ones standing between an organization and serious data, legal, and reputational damage. The line between "a bank that protects your data" and "a tool that quietly trains on it" isn't drawn by the technology itself — it's drawn by governance.
+
+---
+
+*That's GRC in a nutshell: it's not about slowing AI down — it's about making sure it's used responsibly enough that it doesn't blow up in an organization's face later.*
+
+## Sources
+
+- ISO — [ISO/IEC 42001 explained](https://www.iso.org/home/insights-news/resources/iso-42001-explained-what-it-is.html)
+- NIST — AI Risk Management Framework (AI RMF 1.0), January 2023; Generative AI Profile (NIST AI 600-1), July 2024
+- Reserve Bank of India — FREE-AI Committee Report, 13 August 2025
+- Digital Personal Data Protection Act, 2023 (Act 22 of 2023), Government of India
+- Bloomberg / Fortune — Samsung ChatGPT data leak and generative AI ban, May 2023
+- OpenAI — "How your data is used to improve model performance," Data Controls FAQ

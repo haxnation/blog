@@ -63,7 +63,7 @@ export default function ShareButtons() {
 
   return (
     <div className="hax-share-row">
-      <span className="hax-share-label">// SHARE</span>
+      <span className="hax-share-label">{'// SHARE'}</span>
       <button
         type="button"
         className="hax-share-btn"
