@@ -2,9 +2,6 @@
 
 > The official community blog for [Haxnation](https://Haxnation.org) — cybersecurity, development, and community stories.
 
-[![Deploy to GitHub Pages](https://github.com/haxnation/blog/actions/workflows/deploy.yml/badge.svg)](https://github.com/haxnation/blog/actions/workflows/deploy.yml)
-[![PR Validation](https://github.com/haxnation/blog/actions/workflows/validate-pr.yml/badge.svg)](https://github.com/haxnation/blog/actions/workflows/validate-pr.yml)
-
 🌐 **Live Site**: [haxnation.github.io/blog](https://haxnation.github.io/blog/)
 
 ---
