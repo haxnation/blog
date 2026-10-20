@@ -1,11 +1,11 @@
 ---
+slug: grc-for-ai
 title: "GRC for AI: A Beginner's Guide to Governance, Risk, and Compliance"
-author: "Rishi Shukla"
-date: "2026-09-26"
+authors: [24rishishukla-dev]
+date: 2026-09-26T09:00:00.000Z
 tags: [GRC, AI Governance, Cybersecurity, Compliance, ISO 42001, NIST AI RMF, DPDP Act]
+description: What GRC is, why it suddenly matters in the age of AI, and how organizations actually use it - in plain language, with real examples.
 ---
-
-# GRC for AI: A Beginner's Guide to Governance, Risk, and Compliance
 
 Imagine you walk into your bank and apply for a loan. You hand over your salary slips, your PAN card, your address, your spending history. That data doesn't just sit in a drawer — the bank uses it, stores it, and shares parts of it with credit bureaus, insurers, and regulators. But there's one thing the bank is *not* allowed to do: hand your data over to some random third party so that party can profit from it. Banking regulation exists precisely to stop that.
 
@@ -14,6 +14,8 @@ Now compare that to a free AI chatbot. Paste the same salary slip into it to "su
 That gap — the difference between "data handled inside a regulated, accountable system" and "data handled inside a system with looser or unclear rules" — is exactly the problem **GRC** exists to close.
 
 This post breaks down what GRC is, why it suddenly matters so much in the age of AI, and how organizations actually use it — in plain language, with real examples.
+
+<!-- truncate -->
 
 ## What is GRC?
 
