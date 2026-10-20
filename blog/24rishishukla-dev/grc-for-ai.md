@@ -9,13 +9,13 @@ description: What GRC is, why it suddenly matters in the age of AI, and how orga
 
 Imagine you walk into your bank and apply for a loan. You hand over your salary slips, your PAN card, your address, your spending history. That data doesn't just sit in a drawer — the bank uses it, stores it, and shares parts of it with credit bureaus, insurers, and regulators. But there's one thing the bank is *not* allowed to do: hand your data over to some random third party so that party can profit from it. Banking regulation exists precisely to stop that.
 
+<!-- truncate -->
+
 Now compare that to a free AI chatbot. Paste the same salary slip into it to "summarize my finances," and by default, on many consumer AI tools, that conversation can be stored and used to improve the company's models — unless you specifically go into settings and opt out. It's not illegal, it's usually disclosed somewhere in the terms of service, but it's a completely different data relationship than the one you have with your bank. Nobody signed you up for it explicitly, and most people never read the settings page closely enough to notice.
 
 That gap — the difference between "data handled inside a regulated, accountable system" and "data handled inside a system with looser or unclear rules" — is exactly the problem **GRC** exists to close.
 
 This post breaks down what GRC is, why it suddenly matters so much in the age of AI, and how organizations actually use it — in plain language, with real examples.
-
-<!-- truncate -->
 
 ## What is GRC?
 
