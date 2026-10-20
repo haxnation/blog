@@ -67,7 +67,11 @@ jobs:
         run: npm run build
         env:
           CI: true
-          # PREVIEW_BASE_URL intentionally UNSET → config falls back to '/blog/'
+          # GitHub Pages serves this project at /blog/ — the config default is
+          # '/' (Cloudflare Pages, root-mounted), so both values are explicit.
+          SITE_URL: https://haxnation.github.io
+          BASE_URL: /blog/
+          # PREVIEW_BASE_URL intentionally UNSET → not a preview build.
 
       - name: 🚀 Push prod to gh-pages root (preserve pr-*/ previews)
         run: |

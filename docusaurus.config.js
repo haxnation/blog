@@ -13,13 +13,21 @@ const config = {
   tagline: 'Insights, Research & Community from Haxnation',
   favicon: 'img/favicon.svg',
 
-  // ── GitHub Pages deployment ──────────────────────────────────────
-  // Trial: haxnation.github.io/blog
-  // Production: change to 'https://blog.Haxnation.org' and baseUrl: '/'
-  // PR previews override baseUrl via PREVIEW_BASE_URL, e.g. '/blog/pr-123/'
-  // (see .github/workflows/preview-*.yml). Never commit a PR-specific value.
-  url: 'https://haxnation.github.io',
-  baseUrl: process.env.PREVIEW_BASE_URL || '/blog/',
+  // ── Deployment target ─────────────────────────────────────────────
+  // The site is built for a ROOT-mounted host, so baseUrl must be '/'.
+  // 'url' is the public origin (canonical links, sitemap, OG tags).
+  //
+  //   Cloudflare Pages (production):  SITE_URL=https://blog.haxnation.org
+  //                                  BASE_URL=/
+  //   GitHub Pages  (gh-pages prod):  SITE_URL=https://haxnation.github.io
+  //                                  BASE_URL=/blog/
+  //   PR previews:                   PREVIEW_BASE_URL=/blog/pr-123/
+  //                                  (see .github/workflows/preview-*.yml)
+  //
+  // Never commit a PR-specific value. Defaults below target Cloudflare
+  // Pages, which serves the site at the domain root.
+  url: process.env.SITE_URL || 'https://blog.haxnation.org',
+  baseUrl: process.env.PREVIEW_BASE_URL || process.env.BASE_URL || '/',
 
   organizationName: 'haxnation',  // GitHub org/user owning the repo
   projectName: 'blog',     // Repo name
