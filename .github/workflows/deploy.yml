@@ -45,7 +45,7 @@ concurrency:
 jobs:
   build-deploy:
     name: Build & push prod to gh-pages root
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
