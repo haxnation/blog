@@ -41,7 +41,7 @@ concurrency:
 jobs:
   deploy:
     name: Publish preview to gh-pages/pr-<N>/
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     # NOTE: no job-level `if:` on purpose. Gating lives in step 1 ("Resolve").
     # A job-level gate that filters everything out produces "No jobs were run",
