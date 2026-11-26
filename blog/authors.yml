@@ -31,13 +31,13 @@ arham-sayyed:
     github: arham-sayyed
     instagram: _thatguywearinghoodie
 
-st4rburg3r:
+trupti-vibhute:
   name: Trupti Vibhute
   title: Cloud Security Researcher & AWS Student Builder Group Leader
-  url: https://github.com/st4rburg3r
-  image_url: https://github.com/st4rburg3r.png
+  url: https://github.com/trupti-vibhute
+  image_url: https://github.com/trupti-vibhute.png
   socials:
-    github: st4rburg3r
+    github: trupti-vibhute
     instagram: st0pgeeking
 
 harshzagade:
@@ -68,3 +68,11 @@ harshzagade:
   socials:
     github: 24rishishukla-dev
     linkedin: rishi-shukla24
+
+shri004:
+  name: Shrishti Yadav
+  title: Community Blog Writer @ HaxNation
+  url: https://github.com/shri004
+  image_url: https://github.com/shri004.png
+  socials:
+    github: shri004

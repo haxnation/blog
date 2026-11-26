@@ -1,7 +1,7 @@
 ---
 slug: 2026-09-22-red-team-vs-blue-team-in-the-cloud-aws
 title: Red Team vs Blue Team in the Cloud - What Changes When the Battlefield Is AWS
-authors: st4rburg3r
+authors: [trupti-vibhute]
 tags:
   - red-team
   - blue-team
